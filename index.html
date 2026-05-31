@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Oh My Dough! – Bakery Artisan Jakarta. Roti segar handcrafted setiap hari. Order online, delivery & pickup tersedia.">
+  <title>Oh My Dough! · Artisan Bakery Jakarta</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <style>
+    /* ── Design tokens ─────────────────────────────── */
+    :root {
+      --cream : #FDFBF7;
+      --warm  : #F3EFE4;
+      --blue  : #1E40AF;
+      --blue-d: #1e3a8a;
+      --blue-l: #eff6ff;
+      --sand  : #EFEAE0;
+      --pink  : #F295B9;
+      --gold  : #f59e0b;
+      --r     : 20px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: #111827;
+      line-height: 1.7;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: 'liga' 1, 'kern' 1;
+    }
+    h1, h2, h3, h4, h5, h6, .pop { font-family: 'Poppins', sans-serif; }
+    .pop { letter-spacing: -.02em; }
+
+    /* ── Scrollbar ─────────────────────────────────── */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+
+    /* ── Fade-in on scroll ─────────────────────────── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Header ────────────────────────────────────── */
+    #site-header {
+      position: sticky; top: 0; z-index: 40;
+      background: rgba(253,251,247,.96);
+      backdrop-filter: blur(16px) saturate(160%);
+      -webkit-backdrop-filter: blur(16px) saturate(160%);
+      border-bottom: 1px solid rgba(0,0,0,.07);
+      transition: box-shadow .35s ease, background .35s ease;
+    }
+    #site-header.scrolled {
+      background: rgba(253,251,247,.99);
+      box-shadow: 0 2px 20px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.04);
+    }
+
+    /* ── Desktop nav links ─────────────────────────── */
+    .nav-link {
+      position: relative;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: .82rem;
+      color: #6b7280;
+      letter-spacing: .01em;
+      padding: 6px 2px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      transition: color .2s ease;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: var(--blue);
+      border-radius: 2px;
+      transition: width .25s cubic-bezier(.4,0,.2,1);
+    }
+    .nav-link:hover { color: var(--blue); }
+    .nav-link:hover::after,
+    .nav-link.active::after { width: 100%; }
+    .nav-link.active { color: var(--blue); }
+
+    /* ── Lang switcher pill ────────────────────────── */
+    .lang-pill {
+      display: flex; align-items: center;
+      background: var(--warm);
+      border-radius: 999px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .lang-btn {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: .65rem;
+      letter-spacing: .04em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      color: #9ca3af;
+      background: transparent;
+      transition: background .18s, color .18s;
+    }
+    .lang-btn.active-lang {
+      background: #fff;
+      color: var(--blue);
+      box-shadow: 0 1px 4px rgba(0,0,0,.1);
+    }
+
+    /* ── CTA button ────────────────────────────────── */
+    .btn-cta-nav {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: .75rem;
+      letter-spacing: .03em;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(30,64,175,.28);
+      transition: background .2s, transform .15s, box-shadow .2s;
+    }
+    .btn-cta-nav:hover {
+      background: var(--blue-d);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(30,64,175,.38);
+    }
+    .btn-cta-nav:active { transform: scale(.97); }
+
+    /* ── Mobile menu ───────────────────────────────── */
+    #mobile-menu { display: none; position: fixed; inset: 0; z-index: 48; }
+    #mobile-menu.open { display: flex; }
+    #mobile-panel {
+      position: absolute; top: 0; left: 0; bottom: 0;
+      width: 288px;
+      background: #fff;
+      box-shadow: 8px 0 48px rgba(0,0,0,.14);
+      padding: 0;
+      display: flex; flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform .32s cubic-bezier(.4,0,.2,1);
+      overflow: hidden;
+    }
+    #mobile-menu.open #mobile-panel { transform: translateX(0); }
+    #mobile-overlay { position: absolute; inset: 0; background: rgba(15,23,42,.45); backdrop-filter: blur(2px); }
+    .mobile-panel-header {
+      padding: 24px 24px 20px;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .mobile-nav-list { padding: 16px 16px; display: flex; flex-direction: column; gap: 2px; flex: 1; }
+    .mobile-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 13px 14px;
+      border-radius: 14px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: .875rem;
+      color: #374151;
+      border: none; background: none; cursor: pointer; width: 100%;
+      transition: background .15s, color .15s, transform .12s;
+      text-align: left;
+    }
+    .mobile-link:hover { background: var(--blue-l); color: var(--blue); transform: translateX(2px); }
+    .mobile-link.active { background: var(--blue-l); color: var(--blue); }
+    .mobile-link-icon {
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      background: #f8fafc;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      transition: background .15s;
+    }
+    .mobile-link:hover .mobile-link-icon,
+    .mobile-link.active .mobile-link-icon { background: rgba(30,64,175,.1); }
+    .mobile-panel-footer {
+      padding: 20px 24px 28px;
+      border-top: 1px solid #f1f5f9;
+    }
+    .mobile-close-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: #6b7280;
+      transition: background .15s, color .15s;
+    }
+    .mobile-close-btn:hover { background: #fee2e2; color: #ef4444; }
+
+    /* Cart badge styles removed for static catalog */
+
+    /* ── Hero badge pill ───────────────────────────── */
+    .hero-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: var(--blue); color: #fff; border-radius: 999px; font-family:'Poppins',sans-serif; font-weight: 700; font-size: .7rem; letter-spacing: .04em; }
+
+    /* ── Product card ──────────────────────────────── */
+    .product-card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 2px 14px rgba(0,0,0,.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform .25s ease, box-shadow .25s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 32px rgba(0,0,0,.13);
+    }
+    .card-img-wrap {
+      position: relative;
+      overflow: hidden;
+      background: #f0f0f0;
+    }
+    .card-img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      display: block;
+      transition: transform .4s ease;
+      transform: scale(1);
+    }
+    .product-card:hover .card-img { transform: scale(1.04); }
+    .img-placeholder {
+      width: 100%;
+      aspect-ratio: 1/1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.8rem;
+      background: #f0f0f0;
+    }
+    .card-body {
+      flex: 1;
+      padding: 14px 14px 0;
+      text-align: center;
+    }
+    .card-title {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: clamp(0.75rem, 2.5vw, 0.88rem);
+      color: #111827;
+      line-height: 1.35;
+      margin-bottom: 4px;
+    }
+    .card-price {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
+      color: #1D4ED8;
+    }
+    .card-foot { padding: 12px 14px 14px; }
+    .btn-order {
+      width: 100%;
+      padding: 10px 0;
+      background: #1E40AF;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: .72rem;
+      letter-spacing: .03em;
+      border: 1.5px solid #1E40AF;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background .2s, border-color .2s, transform .15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-order:hover {
+      background: #1b3a9f;
+      border-color: #162f8d;
+      transform: scale(1.01);
+    }
+    .btn-order:active { transform: scale(.97); }
+    .added-flash { animation: flashGreen .65s ease; }
+    @keyframes flashGreen { 0%{background:#fff} 45%{background:#dcfce7;color:#16a34a;border-color:#86efac} 100%{background:#fff} }
+
+    @media (max-width: 767px) {
+      #products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .product-card .card-body { padding: 12px 10px 0; }
+      .product-card .card-foot { padding: 10px 12px 12px; }
+    }
+
+    /* ── Why us cards ──────────────────────────────── */
+    .why-card { background: #fff; border-radius: var(--r); padding: 28px 24px; box-shadow: 0 2px 12px rgba(0,0,0,.06); transition: transform .2s, box-shadow .2s; }
+    .why-card:hover { transform: translateY(-4px); box-shadow: 0 10px 32px rgba(30,64,175,.1); }
+    .why-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 14px; }
+
+    /* ── Testimonials ──────────────────────────────── */
+    .testi-card { flex-shrink: 0; background: var(--sand); border-radius: var(--r); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,.06); transition: box-shadow .2s; }
+    .testi-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.1); }
+
+    /* ── Filter pills ──────────────────────────────── */
+    .filter-btn { padding: 7px 18px; border-radius: 999px; border: 1.5px solid #e5e7eb; background: #fff; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: .72rem; color: #6b7280; cursor: pointer; transition: all .18s; outline: none; }
+    .filter-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .filter-btn:focus, .filter-btn:focus-visible { outline: none !important; box-shadow: none !important; }
+    .filter-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); box-shadow: none; }
+
+    /* Modals (generic) */
+    .modal-wrap { position: fixed; inset: 0; background: rgba(0,0,0,.52); z-index: 65; display: none; align-items: center; justify-content: center; padding: 16px; overflow-y: auto; }
+    .modal-wrap.open { display: flex; }
+    .modal-box { background: #fff; border-radius: 24px; width: 100%; max-height: 90vh; overflow-y: auto; animation: slideUp .3s ease; }
+    .modal-box.sm { max-width: 500px; }
+    .modal-box.lg { max-width: 660px; }
+    @keyframes slideUp { from{transform:translateY(36px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+    /* Product modal */
+    .prod-hero { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 24px 24px 0 0; }
+
+    /* FAQ */
+    .faq-item details summary { list-style: none; cursor: pointer; user-select: none; }
+    .faq-item details summary::-webkit-details-marker { display: none; }
+    .faq-item details[open] .faq-chevron { transform: rotate(180deg); }
+    .faq-chevron { transition: transform .25s; flex-shrink: 0; }
+
+    /* Cookie banner */
+    #cookie-banner { position: fixed; bottom: 18px; left: 50%; transform: translate(-50%, 120%); z-index: 80; width: min(92%, 940px); background: #fff; border: 1px solid rgba(148,163,184,.18); border-radius: 28px; padding: 22px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; box-shadow: 0 18px 50px rgba(15,23,42,.18); transition: transform .45s cubic-bezier(.4,0,.2,1), opacity .35s ease; opacity: 0; }
+    #cookie-banner.show { transform: translate(-50%, 0); opacity: 1; }
+    #cookie-banner p { margin: 0; }
+
+    /* Scroll-to-top */
+    #scroll-top { position: fixed; bottom: 28px; right: 24px; z-index: 45; width: 44px; height: 44px; background: var(--blue); border: none; border-radius: 50%; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(30,64,175,.35); opacity: 0; pointer-events: none; transform: translateY(16px); transition: opacity .3s, transform .3s; }
+    #scroll-top.visible { opacity: 1; pointer-events: all; transform: translateY(0); }
+    #scroll-top:hover { background: var(--blue-d); }
+
+    /* Stats counter */
+    .stat-num { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: clamp(1.5rem, 4vw, 2.5rem); color: var(--blue); line-height: 1; }
+
+    /* Section divider */
+    .section-label { display: inline-flex; align-items: center; gap: 7px; padding: 5px 14px; background: var(--blue-l); border-radius: 999px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: clamp(0.6rem, 2vw, 0.75rem); color: var(--blue); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 12px; }
+
+    /* Input focus ring */
+    input:focus, textarea:focus { outline: none; border-color: var(--blue) !important; box-shadow: 0 0 0 3px rgba(30,64,175,.1); }
+    button:focus, .filter-btn:focus, .btn-order:focus, .mobile-link:focus, .product-card:focus, .modal-box:focus { outline: none !important; box-shadow: none !important; }
+    button:focus-visible, .filter-btn:focus-visible, .btn-order:focus-visible, .mobile-link:focus-visible, .product-card:focus-visible, .modal-box:focus-visible { outline: none !important; box-shadow: none !important; }
+
+    /* Smooth image loading */
+    img { display: block; }
+    .img-fade { opacity: 0; transition: opacity .4s; }
+    .img-fade.loaded { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════ COOKIE BANNER ══════════ -->
+<div id="cookie-banner" role="dialog" aria-live="polite" aria-label="Persetujuan cookies">
+  <div class="flex-1 min-w-[220px]">
+    <p class="pop font-bold text-sm text-gray-900 mb-1" data-i18n="cookie_banner_title">Persetujuan Cookies</p>
+    <p class="text-xs text-gray-500 leading-relaxed"><span data-i18n="cookie_banner_text1">Website ini menggunakan cookies teknis untuk menyimpan data keranjang belanja dan memastikan pengalaman berbelanja yang lancar.</span> <strong data-i18n="cookie_banner_text2">Kami tidak menggunakan cookies pelacak atau iklan.</strong></p>
+  </div>
+  <div class="flex gap-2 flex-shrink-0">
+    <button onclick="rejectCookies()" class="px-4 py-2 border-2 border-gray-300 text-gray-600 pop font-bold text-xs rounded-full hover:border-gray-500 transition-colors" data-i18n="cookie_reject">Tolak</button>
+    <button onclick="acceptCookies()" class="px-5 py-2 bg-blue-700 text-white pop font-bold text-xs rounded-full hover:bg-blue-800 transition-colors shadow-md" data-i18n="cookie_accept">Terima</button>
+  </div>
+</div>
+
+<!-- ════════════════════════ SCROLL TOP ══════════════ -->
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Kembali ke atas">
+  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+</button>
+
+<!-- ════════════════════════ MOBILE MENU ═════════════ -->
+<div id="mobile-menu">
+  <div id="mobile-overlay" onclick="closeMobileMenu()"></div>
+  <div id="mobile-panel">
+    <div class="mobile-panel-header">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 bg-blue-700 rounded-xl flex items-center justify-center text-white text-lg">&#x1F369;</div>
+        <div class="flex flex-col leading-none">
+          <span class="pop font-extrabold text-sm text-blue-700">Oh My</span>
+          <span class="pop text-sm font-extrabold text-[#F295B9] italic -mt-0.5">Dough!</span>
+        </div>
+      </div>
+      <button onclick="closeMobileMenu()" class="mobile-close-btn" aria-label="Tutup menu">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <nav class="mobile-nav-list">
+      <button onclick="navigateTo('home'); closeMobileMenu();" class="mobile-link active">
+        <span class="mobile-link-icon">&#x1F3E0;</span>
+        <span data-i18n="nav_home">Home</span>
+      </button>
+      <button onclick="navigateTo('about'); closeMobileMenu();" class="mobile-link">
+        <span class="mobile-link-icon">&#x2728;</span>
+        <span data-i18n="nav_about">Tentang Kami</span>
+      </button>
+      <button onclick="navigateTo('career'); closeMobileMenu();" class="mobile-link">
+        <span class="mobile-link-icon">&#x1F4BC;</span>
+        <span data-i18n="nav_career">Karir</span>
+      </button>
+      <button onclick="navigateTo('download'); closeMobileMenu();" class="mobile-link">
+        <span class="mobile-link-icon">&#x1F4F1;</span>
+        <span data-i18n="nav_download">Unduh Aplikasi</span>
+      </button>
+    </nav>
+    <div class="mobile-panel-footer">
+      <div class="lang-pill mb-4" style="width:fit-content">
+        <button id="mobile-lang-en" onclick="changeLanguage('en')" class="lang-btn">EN</button>
+        <button id="mobile-lang-id" onclick="changeLanguage('id')" class="lang-btn active-lang">ID</button>
+      </div>
+      <button onclick="navigateTo('download'); closeMobileMenu();" class="btn-cta-nav w-full justify-center mb-4">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2" ry="2"/><path d="M12 18h.01" stroke-linecap="round"/></svg>
+        <span data-i18n="order_app">Order in App</span>
+      </button>
+      <p class="text-xs text-gray-400 leading-relaxed">&#x1F4CD; Jl. Bakeri No. 12, Jakarta Selatan<br>&#x1F550; Buka 07.00 &#x2013; 21.00 WIB</p>
+    </div>
+  </div>
+</div>
+
+<!-- Cart and QRIS features removed for static product catalog -->
+
+<!-- ════════════════════════ PRODUCT DETAIL MODAL ════ -->
+<div class="modal-wrap" id="product-modal">
+  <div class="modal-box lg relative">
+    <button onclick="closeModal('product-modal')" class="absolute top-4 right-4 z-10 w-9 h-9 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-500 hover:bg-white hover:text-red-500 shadow-md text-base font-bold transition-colors" aria-label="Tutup detail produk">✕</button>
+    <div class="flex items-center justify-center bg-white h-64 rounded-t-2xl overflow-hidden">
+      <img id="pm-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-src="" data-orig="" alt="" loading="lazy" class="img-fade object-contain max-w-full max-h-full lazy" onerror="if(!this.dataset._tried){this.dataset._tried='1';this.src=this.dataset.orig||this.dataset.src||'';}else{this.style.display='none';document.getElementById('pm-ph').style.display='flex';}">
+      <div id="pm-ph" class="img-placeholder" style="display:none; width:100%; height:100%;"></div>
+    </div>
+    <div class="p-6 space-y-5">
+      <div>
+        <span id="pm-badge" class="inline-block px-3 py-0.5 bg-blue-100 text-blue-700 text-[10px] pop font-bold rounded-full mb-3 tracking-wide"></span>
+        <h3 id="pm-name" class="pop font-extrabold text-xl text-gray-900 leading-tight mb-1"></h3>
+        <p id="pm-price" class="pop font-extrabold text-2xl text-blue-700"></p>
+      </div>
+      <p id="pm-desc" class="text-sm text-gray-500 leading-relaxed border-l-2 border-blue-200 pl-3"></p>
+      <div>
+        <button onclick="navigateTo('download')" class="w-full py-3.5 bg-slate-950 text-white pop font-bold text-sm rounded-2xl hover:bg-slate-800 transition-all shadow-lg" data-i18n="order_app">Pesan Lewat Aplikasi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════ FAQ MODAL ══════════════ -->
+<div class="modal-wrap" id="faq-modal">
+  <div class="modal-box sm">
+    <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100 sticky top-0 bg-white rounded-t-3xl z-10">
+      <h3 class="pop font-extrabold text-lg text-gray-900" data-i18n="faq_title">Pertanyaan Umum · FAQ</h3>
+      <button onclick="closeModal('faq-modal')" class="w-9 h-9 bg-gray-100 hover:bg-red-50 hover:text-red-500 rounded-full flex items-center justify-center text-gray-500 text-sm font-bold transition-colors" aria-label="Tutup FAQ">✕</button>
+    </div>
+    <div class="p-6 space-y-3">
+      <!-- FAQ items -->
+      <div class="faq-item">
+        <details class="border border-gray-200 rounded-2xl overflow-hidden group">
+          <summary class="flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors">
+            <span class="pop font-semibold text-sm text-gray-900 pr-4" data-i18n="faq_q1">Berapa lama ketahanan produk roti kami?</span>
+            <svg class="faq-chevron w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 pb-5 pt-3 text-sm text-gray-500 leading-relaxed border-t border-gray-100 bg-gray-50/50" data-i18n="faq_a1">Produk kami paling nikmat dikonsumsi dalam 1×24 jam setelah diterima. Untuk penyimpanan lebih lama, simpan dalam wadah kedap udara di kulkas (maks. 3 hari) atau freezer (maks. 7 hari). Hangatkan sebentar di oven/air fryer sebelum disantap.</div>
+        </details>
+      </div>
+      <div class="faq-item">
+        <details class="border border-gray-200 rounded-2xl overflow-hidden">
+          <summary class="flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors">
+            <span class="pop font-semibold text-sm text-gray-900 pr-4" data-i18n="faq_q2">Bagaimana cara memesan produk?</span>
+            <svg class="faq-chevron w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 pb-5 pt-3 text-sm text-gray-500 leading-relaxed border-t border-gray-100 bg-gray-50/50" data-i18n="faq_a2">Untuk memesan, buka detail produk dan gunakan tombol "Pesan Lewat Aplikasi" untuk diarahkan ke aplikasi kami. Untuk pesanan catering (min. 50 pcs), hubungi kami via WhatsApp agar dapat diproses secara khusus.</div>
+        </details>
+      </div>
+      <div class="faq-item">
+        <details class="border border-gray-200 rounded-2xl overflow-hidden">
+          <summary class="flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors">
+            <span class="pop font-semibold text-sm text-gray-900 pr-4" data-i18n="faq_q3">Metode pengiriman apa yang tersedia?</span>
+            <svg class="faq-chevron w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 pb-5 pt-3 text-sm text-gray-500 leading-relaxed border-t border-gray-100 bg-gray-50/50" data-i18n="faq_a3">Delivery — antar ke alamat Anda, area Jakarta & sekitarnya (est. 1–2 jam). Pickup — ambil langsung di Jl. Bakeri No. 12, Jaksel, Senin–Minggu 07.00–21.00 WIB. Ongkir dihitung berdasarkan jarak.</div>
+        </details>
+      </div>
+      <div class="faq-item">
+        <details class="border border-gray-200 rounded-2xl overflow-hidden">
+          <summary class="flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors">
+            <span class="pop font-semibold text-sm text-gray-900 pr-4" data-i18n="faq_q4">Apakah pesanan bisa dibatalkan?</span>
+            <svg class="faq-chevron w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 pb-5 pt-3 text-sm text-gray-500 leading-relaxed border-t border-gray-100 bg-gray-50/50" data-i18n="faq_a4">Pembatalan dapat dilakukan paling lambat 30 menit setelah pembayaran dikonfirmasi, karena setelah itu proses produksi sudah dimulai. Segera hubungi CS kami via WhatsApp. Produk yang sudah diproduksi atau dalam pengiriman tidak bisa dibatalkan.</div>
+        </details>
+      </div>
+      <div class="faq-item">
+        <details class="border border-gray-200 rounded-2xl overflow-hidden">
+          <summary class="flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors">
+            <span class="pop font-semibold text-sm text-gray-900 pr-4" data-i18n="faq_q5">Bagaimana cara menghubungi Customer Service?</span>
+            <svg class="faq-chevron w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 pb-5 pt-3 text-sm text-gray-500 leading-relaxed border-t border-gray-100 bg-gray-50/50" data-i18n="faq_a5">WhatsApp: +62 812-3456-7890 (Sen–Min, 08.00–20.00 WIB) Email: breadcrumbs.id@gmail.com Instagram: @breadcrumbs.id Rata-rata respons di bawah 1 jam pada jam kerja.</div>
+        </details>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════ TERMS MODAL ═════════════ -->
+<div class="modal-wrap" id="terms-modal">
+  <div class="modal-box sm">
+    <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100 sticky top-0 bg-white rounded-t-3xl z-10">
+      <h3 class="pop font-extrabold text-lg text-gray-900" data-i18n="terms_title">Terms of Use</h3>
+      <button onclick="closeModal('terms-modal')" class="w-9 h-9 bg-gray-100 hover:bg-red-50 hover:text-red-500 rounded-full flex items-center justify-center text-gray-500 text-sm font-bold transition-colors" aria-label="Tutup syarat penggunaan">✕</button>
+    </div>
+    <div class="p-6 space-y-5 text-sm text-gray-600 leading-relaxed">
+      <div class="p-4 bg-blue-50 border border-blue-100 rounded-2xl">
+        <p class="text-xs text-blue-600" data-i18n="terms_intro">Dengan mengakses website ini, Anda menyetujui seluruh syarat yang berlaku di bawah ini.</p>
+      </div>
+      <div>
+        <h4 class="pop font-bold text-gray-900 mb-2 flex items-center gap-2"><span class="w-5 h-5 bg-blue-700 rounded-full text-white text-[10px] flex items-center justify-center flex-shrink-0 pop font-bold">1</span> <span data-i18n="terms_item1_title">Penerimaan Syarat</span></h4>
+        <p class="pl-7" data-i18n="terms_item1_text">Penggunaan layanan website breadcrumbs.id tunduk pada syarat dan ketentuan yang berlaku. Kami berhak memperbarui ketentuan ini sewaktu-waktu tanpa pemberitahuan sebelumnya.</p>
+      </div>
+      <div>
+        <h4 class="pop font-bold text-gray-900 mb-2 flex items-center gap-2"><span class="w-5 h-5 bg-blue-700 rounded-full text-white text-[10px] flex items-center justify-center flex-shrink-0 pop font-bold">2</span> <span data-i18n="terms_item2_title">Hak Kekayaan Intelektual</span></h4>
+        <p class="pl-7" data-i18n="terms_item2_text">Seluruh konten — termasuk teks, logo, desain, dan seluruh gambar produk — adalah hak milik eksklusif Oh My Dough! Bakery dan dilindungi hukum hak cipta. Penggandaan atau distribusi tanpa izin tertulis adalah tindakan yang dilarang.</p>
+      </div>
+      <div>
+        <h4 class="pop font-bold text-gray-900 mb-2 flex items-center gap-2"><span class="w-5 h-5 bg-blue-700 rounded-full text-white text-[10px] flex items-center justify-center flex-shrink-0 pop font-bold">3</span> <span data-i18n="terms_item3_title">Harga Produk</span></h4>
+        <p class="pl-7" data-i18n="terms_item3_text">Harga produk dapat berubah sewaktu-waktu tanpa pemberitahuan. Harga yang berlaku adalah harga saat Anda menyelesaikan transaksi pembayaran.</p>
+      </div>
+      <div>
+        <h4 class="pop font-bold text-gray-900 mb-2 flex items-center gap-2"><span class="w-5 h-5 bg-blue-700 rounded-full text-white text-[10px] flex items-center justify-center flex-shrink-0 pop font-bold">4</span> <span data-i18n="terms_item4_title">Batasan Tanggung Jawab</span></h4>
+        <p class="pl-7" data-i18n="terms_item4_text">Oh My Dough! Bakery tidak bertanggung jawab atas kerugian akibat keterlambatan di luar kendali kami, termasuk kondisi cuaca, kemacetan, atau gangguan sistem pihak ketiga.</p>
+      </div>
+      <p class="text-[11px] text-gray-400 pt-2 border-t border-gray-100" data-i18n="terms_footer_note">Terakhir diperbarui: Mei 2026 · Oh My Dough! Bakery, Jakarta Selatan</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════ COOKIE POLICY MODAL ═════ -->
+<div class="modal-wrap" id="cookie-modal">
+  <div class="modal-box sm">
+    <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100 sticky top-0 bg-white rounded-t-3xl z-10">
+      <h3 class="pop font-extrabold text-lg text-gray-900" data-i18n="cookie_title">Kebijakan Cookies</h3>
+      <button onclick="closeModal('cookie-modal')" class="w-9 h-9 bg-gray-100 hover:bg-red-50 hover:text-red-500 rounded-full flex items-center justify-center text-gray-500 text-sm font-bold transition-colors" aria-label="Tutup kebijakan cookies">✕</button>
+    </div>
+    <div class="p-6 space-y-4 text-sm text-gray-600 leading-relaxed">
+      <p data-i18n="cookie_intro">Website Oh My Dough! menggunakan cookies hanya untuk keperluan teknis guna memastikan pengalaman berbelanja Anda berjalan lancar.</p>
+      <div class="space-y-2">
+        <div class="flex gap-3 bg-gray-50 rounded-xl p-4"><span class="text-xl flex-shrink-0"></span><div><p class="pop font-semibold text-xs text-gray-800 mb-0.5" data-i18n="cookie_item1_title">Data Keranjang Belanja</p><p class="text-xs text-gray-500" data-i18n="cookie_item1_text">Menyimpan item yang Anda tambahkan agar tidak hilang saat halaman di-refresh.</p></div></div>
+        <div class="flex gap-3 bg-gray-50 rounded-xl p-4"><span class="text-xl flex-shrink-0"></span><div><p class="pop font-semibold text-xs text-gray-800 mb-0.5" data-i18n="cookie_item2_title">Preferensi Sesi</p><p class="text-xs text-gray-500" data-i18n="cookie_item2_text">Mengingat pilihan metode pengiriman selama sesi berlangsung.</p></div></div>
+      </div>
+      <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
+        <p class="pop font-bold text-blue-800 text-xs mb-1" data-i18n="cookie_notice_title">Yang TIDAK kami lakukan</p>
+        <p class="text-xs text-blue-600" data-i18n="cookie_notice_text">Kami tidak menggunakan cookies untuk iklan, pelacakan lintas situs, atau menjual data Anda kepada pihak ketiga.</p>
+      </div>
+      <div>
+        <h4 class="pop font-bold text-gray-900 mb-2 text-sm" data-i18n="cookie_cleanup_title">Cara menghapus cookies via browser:</h4>
+        <div class="space-y-1 text-xs text-gray-500 bg-gray-50 rounded-xl p-4">
+          <p><strong class="text-gray-700">Chrome:</strong> <span data-i18n="cookie_cleanup_chrome">Setelan → Privasi & Keamanan → Hapus Data Penjelajahan</span></p>
+          <p><strong class="text-gray-700">Safari:</strong> <span data-i18n="cookie_cleanup_safari">Preferensi → Privasi → Kelola Data Website</span></p>
+          <p><strong class="text-gray-700">Firefox:</strong> <span data-i18n="cookie_cleanup_firefox">Opsi → Privasi & Keamanan → Cookies dan Data Situs</span></p>
+        </div>
+      </div>
+      <p class="text-[11px] text-gray-400 border-t border-gray-100 pt-3" data-i18n="cookie_footer_note">Terakhir diperbarui: Mei 2026 · Oh My Dough! Bakery</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════ HEADER ══════════════════ -->
+<header id="site-header">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+
+    <!-- Logo -->
+    <a href="#" onclick="navigateTo('home')" class="flex items-center gap-2.5 flex-shrink-0 group">
+      <div class="w-9 h-9 bg-blue-700 rounded-xl flex items-center justify-center text-white text-base shadow-md group-hover:scale-105 transition-transform" style="box-shadow:0 4px 12px rgba(30,64,175,.3)">&#x1F369;</div>
+      <div class="flex flex-col leading-none items-start">
+        <span class="pop font-extrabold text-base tracking-tight text-blue-700">Oh My</span>
+        <span class="pop text-base font-extrabold text-[#F295B9] italic -mt-0.5">Dough!</span>
+      </div>
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden md:flex items-center gap-1">
+      <button onclick="navigateTo('home')" class="nav-link active" data-nav="home" data-i18n="nav_home">Home</button>
+      <div class="w-px h-3 bg-gray-200 mx-2"></div>
+      <button onclick="navigateTo('about')" class="nav-link" data-nav="about" data-i18n="nav_about">Tentang Kami</button>
+      <div class="w-px h-3 bg-gray-200 mx-2"></div>
+      <button onclick="navigateTo('career')" class="nav-link" data-nav="career" data-i18n="nav_career">Karir</button>
+      <div class="w-px h-3 bg-gray-200 mx-2"></div>
+      <button onclick="navigateTo('download')" class="nav-link" data-nav="download" data-i18n="nav_download">Unduh Aplikasi</button>
+    </nav>
+
+    <!-- Actions (desktop) -->
+    <div class="hidden md:flex items-center gap-3">
+      <div class="lang-pill">
+        <button id="lang-en" onclick="changeLanguage('en')" class="lang-btn">EN</button>
+        <button id="lang-id" onclick="changeLanguage('id')" class="lang-btn active-lang">ID</button>
+      </div>
+      <button onclick="navigateTo('download')" class="btn-cta-nav">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="7" y="2" width="10" height="20" rx="2" ry="2"/><path d="M12 18h.01" stroke-linecap="round"/></svg>
+        <span data-i18n="order_app">Order in App</span>
+      </button>
+    </div>
+
+    <!-- Hamburger (mobile only) -->
+    <button onclick="openMobileMenu()" class="md:hidden flex flex-col gap-[5px] items-end p-2 rounded-xl hover:bg-gray-100 transition-colors" aria-label="Buka menu">
+      <span class="block w-5 h-0.5 bg-gray-700 rounded-full transition-all"></span>
+      <span class="block w-4 h-0.5 bg-gray-700 rounded-full transition-all"></span>
+      <span class="block w-5 h-0.5 bg-gray-700 rounded-full transition-all"></span>
+    </button>
+
+  </div>
+</header>
+
+<!-- ════════════════════════ HERO ════════════════════ -->
+<section id="home-page" data-page="home" class="max-w-7xl mx-auto px-4 sm:px-6 py-12 lg:py-16 grid lg:grid-cols-12 gap-10 items-center">
+  <div class="lg:col-span-5 space-y-6">
+    <span class="hero-badge">Fresh Setiap Pagi</span>
+    <h1 class="pop text-2xl sm:text-3xl lg:text-[3.2rem] font-extrabold text-gray-900 tracking-tight leading-[1.15]">
+      Happiness is <span class="text-blue-700">Handcrafted</span> <span class="text-[#F295B9]">Dough!</span>
+    </h1>
+    <p class="text-gray-500 text-sm sm:text-base leading-relaxed max-w-md">Karena setiap gigitan punya cerita. Nikmati varian donat estetik dan pastry artisan premium yang dibuat dengan penuh cinta khusus untuk bikin hari-harimu jadi lebih manis.</p>
+    <!-- Stats row -->
+    <div class="flex gap-6 py-2">
+      <div><p class="stat-num">50<span class="text-blue-400 text-xl">+</span></p><p class="text-xs text-gray-400 mt-1 font-medium" data-i18n="stats_variants">Varian Menu</p></div>
+      <div class="w-px bg-gray-200"></div>
+      <div><p class="stat-num">4.9<span class="text-gold text-xl">★</span></p><p class="text-xs text-gray-400 mt-1 font-medium" data-i18n="stats_rating">Rating</p></div>
+      <div class="w-px bg-gray-200"></div>
+      <div><p class="stat-num">2k<span class="text-blue-400 text-xl">+</span></p><p class="text-xs text-gray-400 mt-1 font-medium" data-i18n="stats_customers">Pelanggan</p></div>
+    </div>
+  </div>
+  <div class="lg:col-span-7 reveal">
+    <div id="promo-app" class="relative w-full h-64 sm:h-80 md:h-[400px] overflow-hidden rounded-3xl shadow-lg bg-[#F3EFE4]" aria-live="polite">
+      <img :src="promoImages[currentIndex]" :alt="`Promo ${currentIndex+1}`" loading="lazy" class="w-full h-full object-cover transition-all duration-500 ease-in-out" onerror="this.src='./image/promo1.png'" />
+      <!-- Dots -->
+      <div class="absolute bottom-4 right-4 flex items-center gap-2">
+        <button v-for="(img, idx) in promoImages" :key="idx" @click="goTo(idx)"
+          :class="['w-2 h-2 rounded-full transition-opacity', currentIndex===idx ? 'bg-white/90' : 'bg-white/40']" aria-label="Ganti slide"></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="page-skeleton" class="max-w-7xl mx-auto px-4 sm:px-6 py-14 hidden">
+  <div class="animate-pulse space-y-6">
+    <div class="h-10 rounded-full bg-slate-200"></div>
+    <div class="grid gap-4 lg:grid-cols-3">
+      <div class="space-y-4">
+        <div class="h-72 rounded-[2rem] bg-slate-200"></div>
+        <div class="h-4 rounded-full bg-slate-200 w-4/5"></div>
+        <div class="h-4 rounded-full bg-slate-200 w-2/5"></div>
+      </div>
+      <div class="space-y-4">
+        <div class="h-72 rounded-[2rem] bg-slate-200"></div>
+        <div class="h-4 rounded-full bg-slate-200 w-3/5"></div>
+        <div class="h-4 rounded-full bg-slate-200 w-1/2"></div>
+      </div>
+      <div class="space-y-4">
+        <div class="h-40 rounded-[2rem] bg-slate-200"></div>
+        <div class="h-4 rounded-full bg-slate-200 w-4/5"></div>
+        <div class="h-4 rounded-full bg-slate-200 w-2/5"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="page-about" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-14">
+  <div class="bg-white rounded-[2rem] shadow-2xl p-8 lg:p-12">
+    <div class="max-w-3xl">
+      <span class="section-label" data-i18n="about_label">Tentang Kami</span>
+      <h2 class="pop text-xl sm:text-2xl lg:text-4xl font-extrabold text-gray-900 mt-4" data-i18n="about_heading">Cerita kami dimulai dari meja kecil di dapur roti lokal.</h2>
+      <p class="text-gray-500 text-xs sm:text-sm md:text-base mt-5 leading-relaxed" data-i18n="about_description">Oh My Dough! percaya bahwa roti terbaik lahir dari bahan alami, tangan yang terlatih, dan proses yang penuh perhatian. Kami berdedikasi menghidangkan roti artisan setiap hari dengan rasa yang konsisten dan nuansa hangat yang mengundang.</p>
+    </div>
+    <div class="grid gap-5 mt-10 sm:grid-cols-3">
+      <div class="why-card">
+        <div class="why-icon bg-amber-50"></div>
+        <h3 class="pop font-bold text-gray-900 text-sm mb-2" data-i18n="about_adv1_title">100% Bahan Alami</h3>
+        <p class="text-xs text-gray-500" data-i18n="about_adv1_desc">Kami hanya menggunakan bahan mentah alami, bebas pengawet dan pewarna sintetis.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon bg-blue-50"></div>
+        <h3 class="pop font-bold text-gray-900 text-sm mb-2" data-i18n="about_adv2_title">Dipanggang Segar</h3>
+        <p class="text-xs text-gray-500" data-i18n="about_adv2_desc">Semua rotinya dipanggang setiap hari di toko kami agar aroma dan tekstur tetap prima.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon bg-green-50"></div>
+        <h3 class="pop font-bold text-gray-900 text-sm mb-2" data-i18n="about_adv3_title">Ramah Lingkungan</h3>
+        <p class="text-xs text-gray-500" data-i18n="about_adv3_desc">Kami mengoptimalkan bahan baku lokal dan kemasan yang lebih bijak demi bumi yang lebih sejuk.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="page-career" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-14 space-y-10">
+  <div class="bg-[#f8f4ec] rounded-3xl shadow-2xl overflow-hidden">
+    <div class="grid gap-8 lg:grid-cols-2 items-center p-6 lg:p-10">
+      <div class="space-y-5">
+        <div class="rounded-[2rem] overflow-hidden bg-gradient-to-br from-slate-100 via-amber-100 to-white shadow-xl">
+          <div class="relative h-96 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_55%)]">
+            <div class="absolute inset-0 bg-[linear-gradient(135deg,_#fdf6ec,_#f5ece5)]"></div>
+            <div class="absolute bottom-8 left-8 right-8 top-10 rounded-[2rem] bg-slate-900 shadow-inner"></div>
+            <div class="absolute left-10 top-14 w-24 h-24 rounded-3xl bg-slate-200/90 blur-xl"></div>
+            <div class="absolute right-10 top-24 w-16 h-16 rounded-3xl bg-amber-200/80 blur-xl"></div>
+          </div>
+          <div class="px-6 py-5">
+            <div class="flex items-center justify-center gap-3">
+              <span class="w-3 h-3 rounded-full bg-slate-400"></span>
+              <span class="w-3 h-3 rounded-full bg-slate-400"></span>
+              <span class="w-3 h-3 rounded-full bg-slate-400"></span>
+              <span class="w-3 h-3 rounded-full bg-slate-400"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="space-y-5">
+        <div class="flex items-center gap-3">
+          <span class="h-[1px] w-14 bg-blue-700"></span>
+          <p class="text-sm font-semibold uppercase text-blue-700" data-i18n="career_team_subheading">Team Story</p>
+        </div>
+        <h2 class="pop text-xl sm:text-2xl lg:text-4xl font-extrabold text-gray-900" data-i18n="career_team_heading">Oh My Dough! Team Journey</h2>
+        <p class="text-gray-500 leading-relaxed" data-i18n="career_team_desc">Tim kami adalah gabungan antara pastri chef berpengalaman, barista kreatif, dan storyteller visual. Setiap hari kami bergerak bersama untuk menghadirkan roti yang tidak hanya lezat, tetapi juga punya cerita di baliknya.</p>
+      </div>
+    </div>
+  </div>
+  <div class="grid gap-5 sm:grid-cols-2">
+    <article class="bg-white rounded-[2rem] border border-gray-100 p-6 shadow-sm">
+      <div class="flex items-center justify-between gap-3 mb-5">
+        <span class="inline-flex px-3 py-1 rounded-full bg-blue-700 text-white text-[11px] font-semibold" data-i18n="career_job1_type">Full-time</span>
+        <span class="text-xs text-gray-500" data-i18n="career_job1_location">Jakarta Selatan</span>
+      </div>
+      <h3 class="pop font-bold text-xl text-gray-900 mb-3" data-i18n="career_job1_title">Barista Kreatif</h3>
+      <p class="text-sm text-gray-500 leading-relaxed mb-6" data-i18n="career_job1_desc">Bergabunglah dengan tim kami untuk menciptakan minuman kopi dan pengalaman bakery premium yang konsisten untuk setiap pelanggan.</p>
+      <button onclick="showToast(translations[currentLanguage]?.career_apply_toast)" class="w-full py-3 rounded-full bg-blue-700 text-white pop font-semibold text-sm hover:bg-blue-800 transition-colors" data-i18n="career_apply_button">Lamar Sekarang</button>
+    </article>
+    <article class="bg-white rounded-[2rem] border border-gray-100 p-6 shadow-sm">
+      <div class="flex items-center justify-between gap-3 mb-5">
+        <span class="inline-flex px-3 py-1 rounded-full bg-slate-900 text-white text-[11px] font-semibold" data-i18n="career_job2_type">Internship</span>
+        <span class="text-xs text-gray-500" data-i18n="career_job2_location">Jakarta Selatan</span>
+      </div>
+      <h3 class="pop font-bold text-xl text-gray-900 mb-3" data-i18n="career_job2_title">Media & Konten Kreator</h3>
+      <p class="text-sm text-gray-500 leading-relaxed mb-6" data-i18n="career_job2_desc">Magang sambil berkarya, bantu kami membagikan cerita produk dan momen craft baking melalui foto, video, dan konten sosial media.</p>
+      <button onclick="showToast(translations[currentLanguage]?.career_apply_toast)" class="w-full py-3 rounded-full bg-blue-700 text-white pop font-semibold text-sm hover:bg-blue-800 transition-colors" data-i18n="career_apply_button">Lamar Sekarang</button>
+    </article>
+  </div>
+</section>
+
+<section id="page-download" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-14">
+  <div class="grid gap-10 lg:grid-cols-2 items-center">
+    <div class="space-y-7">
+      <span class="section-label" data-i18n="download_label">Unduh Aplikasi</span>
+      <h2 class="pop text-xl sm:text-2xl lg:text-4xl font-extrabold text-gray-900" data-i18n="download_heading">Order lebih cepat lewat aplikasi Oh My Dough!</h2>
+      <p class="text-gray-500 text-xs sm:text-sm md:text-base leading-relaxed max-w-xl" data-i18n="download_desc">Nikmati pengalaman pesan yang lebih cepat, notifikasi promo eksklusif, dan pelacakan pesanan real-time langsung dari ponselmu.</p>
+      <div class="flex flex-wrap gap-3">
+        <button class="flex items-center gap-3 px-5 py-3 bg-slate-950 text-white rounded-2xl shadow-lg hover:bg-black transition-colors">
+          <span class="inline-flex w-9 h-9 bg-white/10 rounded-2xl items-center justify-center"></span>
+          <div class="text-left text-xs leading-tight">
+            <div class="font-semibold" data-i18n="download_google">Google Play</div>
+            <div class="text-gray-300" data-i18n="download_getit">Get it on</div>
+          </div>
+        </button>
+        <button class="flex items-center gap-3 px-5 py-3 bg-slate-950 text-white rounded-2xl shadow-lg hover:bg-black transition-colors">
+          <span class="inline-flex w-9 h-9 bg-white/10 rounded-2xl items-center justify-center"></span>
+          <div class="text-left text-xs leading-tight">
+            <div class="font-semibold" data-i18n="download_appstore">App Store</div>
+            <div class="text-gray-300" data-i18n="download_download">Download</div>
+          </div>
+        </button>
+      </div>
+    </div>
+    <div class="flex justify-center">
+      <div class="relative w-full max-w-[320px] h-[560px] rounded-[3rem] bg-slate-950 shadow-2xl overflow-hidden border border-white/10">
+        <div class="absolute left-1/2 top-6 -translate-x-1/2 w-24 h-1.5 rounded-full bg-slate-700"></div>
+        <div class="absolute top-8 right-6 w-10 h-10 rounded-3xl border border-white/10 bg-slate-900"></div>
+        <div class="absolute inset-x-8 top-24 bottom-12 rounded-[2rem] bg-gradient-to-b from-slate-900 via-slate-800 to-slate-950 p-6 shadow-inner">
+          <div class="h-12 bg-white/10 rounded-3xl mb-5"></div>
+          <div class="space-y-4">
+            <div class="h-4 bg-slate-700 rounded-full w-3/4"></div>
+            <div class="h-4 bg-slate-700 rounded-full w-1/2"></div>
+            <div class="grid grid-cols-2 gap-4 mt-6">
+              <div class="h-28 rounded-3xl bg-slate-800"></div>
+              <div class="h-28 rounded-3xl bg-slate-800"></div>
+            </div>
+            <div class="h-3 bg-slate-700 rounded-full w-full mt-8"></div>
+            <div class="h-3 bg-slate-700 rounded-full w-5/6"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════ PRODUCTS ════════════════ -->
+<section id="products" data-page="home" class="max-w-7xl mx-auto px-4 sm:px-6 py-14">
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-10 reveal">
+    <div>
+      <span class="section-label" data-i18n="products_label">Menu Kami</span>
+      <h2 class="pop text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 tracking-tight mt-2" data-i18n="products_heading">Menu Andalan</h2>
+      <p class="text-gray-400 text-xs sm:text-sm mt-1" data-i18n="products_caption">Klik kartu untuk melihat detail produk</p>
+    </div>
+    <div class="flex flex-wrap gap-2" id="filter-btns">
+      <button class="filter-btn active" data-cat="all" data-i18n="filter_all">Semua</button>
+      <button class="filter-btn" data-cat="cake" data-i18n="filter_cake">Cake</button>
+      <button class="filter-btn" data-cat="sweet-treats" data-i18n="filter_sweet_treats">Sweet Treats</button>
+      <button class="filter-btn" data-cat="pastry" data-i18n="filter_pastry">Pastry</button>
+      <button class="filter-btn" data-cat="doughnut" data-i18n="filter_doughnut">Donat</button>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6" id="products-grid"></div>
+</section>
+
+<!-- ════════════════════════ TESTIMONIALS ════════════ -->
+<section id="testimonials" data-page="home" class="max-w-7xl mx-auto px-4 sm:px-6 py-14">
+  <div class="flex items-end justify-between mb-10 reveal">
+    <div>
+      <span class="section-label" data-i18n="testimonials_label">Ulasan Pelanggan</span>
+      <h2 class="pop text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 tracking-tight mt-2" data-i18n="testimonials_heading">Kata Mereka</h2>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="slideTesti(-1)" class="w-10 h-10 rounded-full border-2 border-gray-300 hover:border-blue-600 hover:bg-blue-50 flex items-center justify-center text-gray-400 hover:text-blue-700 transition-all" aria-label="Sebelumnya">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button onclick="slideTesti(1)" class="w-10 h-10 rounded-full border-2 border-gray-300 hover:border-blue-600 hover:bg-blue-50 flex items-center justify-center text-gray-400 hover:text-blue-700 transition-all" aria-label="Berikutnya">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="overflow-hidden">
+    <div id="testi-track" class="flex gap-5 transition-transform duration-500 ease-in-out"></div>
+  </div>
+  <div class="flex justify-center gap-2 mt-6" id="testi-dots"></div>
+</section>
+
+<!-- ════════════════════════ CONTACT ═════════════════ -->
+<section id="contact" data-page="home" class="max-w-7xl mx-auto px-4 sm:px-6 py-14">
+  <div class="bg-[#FDFBF7] rounded-3xl shadow-md p-8 lg:p-10 flex flex-col lg:flex-row gap-8">
+    <div class="lg:w-1/2 space-y-8">
+      <div class="space-y-3">
+        <span class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#F295B9]/10 text-sm font-semibold text-[#F295B9]">Kontak & Lokasi</span>
+        <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900">Let's Taste the Happiness</h2>
+        <p class="text-xs sm:text-sm text-slate-600 max-w-xl">Tinggalkan pesan untuk kami. Tim Oh My Dough! siap membantu pertanyaan pesanan, event, dan kolaborasi manis Anda.</p>
+      </div>
+      <form class="space-y-4" onsubmit="event.preventDefault();">
+        <div class="grid gap-4">
+          <input type="text" name="name" placeholder="Nama" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm text-slate-800 placeholder-slate-400 transition focus:border-[#F295B9] focus:ring-2 focus:ring-[#F295B9]/30 outline-none" />
+          <input type="email" name="email" placeholder="Email" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm text-slate-800 placeholder-slate-400 transition focus:border-[#F295B9] focus:ring-2 focus:ring-[#F295B9]/30 outline-none" />
+          <textarea name="message" rows="5" placeholder="Pesan" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm text-slate-800 placeholder-slate-400 transition focus:border-[#F295B9] focus:ring-2 focus:ring-[#F295B9]/30 outline-none resize-none"></textarea>
+        </div>
+        <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#1E40AF] text-white font-semibold rounded-2xl shadow-lg shadow-[#1E40AF]/15 transition hover:bg-[#162f7d] hover:-translate-y-0.5">Kirim Pesan</button>
+      </form>
+    </div>
+
+    <div class="lg:w-1/2 space-y-6">
+      <div class="bg-[#F295B9] p-3 rounded-2xl shadow-xl shadow-[#F295B9]/20">
+        <div class="overflow-hidden rounded-xl bg-white">
+          <iframe class="w-full h-64 lg:h-full min-h-[380px] rounded-xl border-0" loading="lazy"
+            src="https://maps.google.com/maps?q=Jl.%20Bakeri%20No.%2012%2C%20Jakarta%20Selatan%2C%20Indonesia&output=embed"
+            allowfullscreen="" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════ FOOTER ══════════════════ -->
+<footer class="bg-[#0f2878] text-white mt-6">
+  <!-- Top band -->
+  <div class="border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid md:grid-cols-3 gap-12">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-9 h-9 bg-white/15 rounded-xl flex items-center justify-center pop font-extrabold text-sm">OM</div>
+          <div class="flex flex-col leading-none">
+            <span class="pop font-extrabold text-base">Oh My Dough!</span>
+            <span class="text-[10px] text-blue-300 font-medium italic -mt-0.5">Artisan Bakery Jakarta</span>
+          </div>
+        </div>
+        <p class="text-[12px] text-blue-200 leading-relaxed">Menghadirkan roti artisan premium dengan bahan terbaik, dipanggang segar setiap hari untuk memanjakan lidah Anda.</p>
+      </div>
+      <div>
+        <h4 class="pop font-bold text-sm mb-4 text-blue-100" data-i18n="footer_nav_title">Navigasi</h4>
+        <div class="space-y-2">
+          <a href="#" class="block text-xs text-blue-300 hover:text-white transition-colors" data-i18n="footer_nav_home">Home</a>
+          <a href="#products" class="block text-xs text-blue-300 hover:text-white transition-colors" data-i18n="footer_nav_products">Menu Produk</a>
+          <a href="#why-us" class="block text-xs text-blue-300 hover:text-white transition-colors" data-i18n="footer_nav_why">Kenapa Kami</a>
+          <a href="#testimonials" class="block text-xs text-blue-300 hover:text-white transition-colors" data-i18n="footer_nav_testimonials">Ulasan Pelanggan</a>
+          <a href="#contact" class="block text-xs text-blue-300 hover:text-white transition-colors" data-i18n="footer_nav_contact">Kontak</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="pop font-bold text-sm mb-4 text-blue-100" data-i18n="footer_contact_title">Hubungi Kami</h4>
+        <div class="space-y-2 text-xs text-blue-300">
+          <p data-i18n="footer_contact_address">Jl. Bakeri No. 12, Jaksel</p>
+          <p data-i18n="footer_contact_phone">+62 812-3456-7890</p>
+          <p data-i18n="footer_contact_email">breadcrumbs.id@gmail.com</p>
+          <p data-i18n="footer_contact_hours">07.00 – 21.00 WIB</p>
+        </div>
+        <div class="flex flex-wrap justify-center md:justify-start gap-4 mt-6 md:mt-8">
+          <a href="#" aria-label="Instagram" class="w-9 h-9 rounded-full bg-gradient-to-br from-[#F295B9] via-red-500 to-yellow-400 flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+          <a href="#" aria-label="Facebook" class="w-9 h-9 rounded-full bg-[#1877F2] flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+          <a href="#" aria-label="WhatsApp" class="w-9 h-9 rounded-full bg-[#25D366] flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Bottom band -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row justify-between items-center gap-3">
+    <p class="text-[11px] text-blue-300" data-i18n="footer_copyright">©2026 Oh My Dough! Bakery · All rights reserved</p>
+    <div class="flex gap-5 text-[11px] pop font-semibold tracking-wider text-blue-300">
+      <button onclick="openModal('terms-modal')" class="hover:text-white transition-colors bg-transparent border-0 cursor-pointer text-[11px] pop font-semibold tracking-wider text-blue-300" data-i18n="bottom_terms">TERM OF USE</button>
+      <button onclick="openModal('faq-modal')" class="hover:text-white transition-colors bg-transparent border-0 cursor-pointer text-[11px] pop font-semibold tracking-wider text-blue-300" data-i18n="bottom_faq">FAQ</button>
+      <button onclick="openModal('cookie-modal')" class="hover:text-white transition-colors bg-transparent border-0 cursor-pointer text-[11px] pop font-semibold tracking-wider text-blue-300" data-i18n="bottom_cookies">COOKIES</button>
+    </div>
+  </div>
+</footer>
+
+<!-- ════════════════════════ JAVASCRIPT ══════════════ -->
+<script>
+  /* ── Products data ──────────────────────────────── */
+
+  const products = [
+    { id: 1, name: { id: 'Velvet Blueberry Shortcake', en: 'Velvet Blueberry Shortcake' }, price: 38000, cat: 'cake', emoji: '🫐', img: './image/blueberry-cake.png', desc: { id: 'Cake blueberry lembut dengan krim vanila dan blueberry segar.', en: 'Soft blueberry cake layered with vanilla cream and fresh blueberries.' } },
+    { id: 2, name: { id: 'Classic Fudgy Brownies', en: 'Classic Fudgy Brownies' }, price: 28000, cat: 'sweet-treats', emoji: '🍫', img: './image/brownies.png', desc: { id: 'Brownies fudgy klasik dengan tekstur lembap dan cokelat pekat.', en: 'Classic fudgy brownies with moist texture and rich chocolate.' } },
+    { id: 3, name: { id: 'Belgian Chocolate Fudge Cake', en: 'Belgian Chocolate Fudge Cake' }, price: 42000, cat: 'cake', emoji: '🍰', img: './image/chocolate-cake.png', desc: { id: 'Cake cokelat Belgia dekaden, lapisan fudge lembut dan glasir kilap.', en: 'Decadent Belgian chocolate cake with soft fudge layers and glossy glaze.' } },
+    { id: 6, name: { id: 'Roasted Almond Glazed Donut', en: 'Roasted Almond Glazed Donut' }, price: 18000, cat: 'doughnut', emoji: '🍩', img: './image/donat-almond.png', desc: { id: 'Donat glasir almond panggang dengan tekstur renyah di luar.', en: 'Roasted almond glazed donut with a lightly crisp exterior.' } },
+    { id: 7, name: { id: 'Double Belgian Chocolate Donut', en: 'Double Belgian Chocolate Donut' }, price: 18000, cat: 'doughnut', emoji: '🍫', img: './image/donat-coklat.png', desc: { id: 'Donat cokelat ganda dengan lapisan ganache pekat.', en: 'Double chocolate donut topped with rich ganache.' } },
+    { id: 8, name: { id: 'Classic Snow Powder Donut', en: 'Classic Snow Powder Donut' }, price: 15000, cat: 'doughnut', emoji: '🍩', img: './image/donat-gula.png', desc: { id: 'Donat klasik dengan taburan gula halus, lembut dan manis.', en: 'Classic powder-sugar donut, soft and sweet.' } },
+    { id: 9, name: { id: 'Pink Berry Glazed Donut', en: 'Pink Berry Glazed Donut' }, price: 18000, cat: 'doughnut', emoji: '🍓', img: './image/donat-strawberry.png', desc: { id: 'Donat glasir stroberi warna pink yang manis dan ceria.', en: 'Pink berry glazed donut, sweet and cheerful.' } },
+    { id: 10, name: { id: 'Chocolate Ganache Swiss Roll', en: 'Chocolate Ganache Swiss Roll' }, price: 32000, cat: 'sweet-treats', emoji: '🥮', img: './image/roti-gulung-coklat.png', desc: { id: 'Roti gulung lembut diisi ganache cokelat pekat.', en: 'Soft swiss roll filled with rich chocolate ganache.' } },
+    { id: 11, name: { id: 'Signature Vanilla Butter Roll', en: 'Signature Vanilla Butter Roll' }, price: 30000, cat: 'sweet-treats', emoji: '', img: './image/roti-gulung-original.png', desc: { id: 'Roti gulung beraroma vanila dan mentega, klasik dan harum.', en: 'Vanilla butter roll, classic and fragrant.' } },
+    { id: 12, name: { id: 'Fragrant Pandan Kaya Roll', en: 'Fragrant Pandan Kaya Roll' }, price: 32000, cat: 'sweet-treats', emoji: '🌿', img: './image/roti-gulung-pandan.png', desc: { id: 'Roti gulung pandan dengan selai kaya tradisional, harum dan lembut.', en: 'Pandan roll filled with traditional kaya jam, fragrant and soft.' } },
+    { id: 13, name: { id: 'Matcha Strawberry Layer Cake', en: 'Matcha Strawberry Layer Cake' }, price: 45000, cat: 'cake', emoji: '🍵', img: './image/special-cake.png', desc: { id: 'Cake lapis matcha dengan isian stroberi segar, unik dan elegan.', en: 'Matcha layer cake with fresh strawberry filling, elegant and unique.' } },
+    { id: 14, name: { id: 'Fresh Strawberry Cream Cake', en: 'Fresh Strawberry Cream Cake' }, price: 40000, cat: 'cake', emoji: '🍓', img: './image/strawberry-cake.png', desc: { id: 'Cake krim stroberi segar dengan tekstur lembut dan manis alami.', en: 'Fresh strawberry cream cake with soft texture and natural sweetness.' } },
+    { id: 4, name: { id: 'Golden Butter Croissant', en: 'Golden Butter Croissant' }, price: 25000, cat: 'pastry', emoji: '', img: './image/croissant.png', desc: { id: 'Croissant berlapis mentega, renyah di luar dan lembut di dalam.', en: 'Buttery layered croissant, crisp outside and tender inside.' } },
+    { id: 5, name: { id: 'Chocolate Supreme Cromboloni', en: 'Chocolate Supreme Cromboloni' }, price: 35000, cat: 'pastry', emoji: '🍩', img: './image/cromboloni.png', desc: { id: 'Kromboloni isi cokelat Belgia yang melimpah, manis dan memuaskan.', en: 'Cromboloni filled with generous Belgian chocolate, sweet and satisfying.' } },
+    { id: 15, name: { id: 'Cinnamon Sugar Swirl Pastry', en: 'Cinnamon Sugar Swirl Pastry' }, price: 28000, cat: 'pastry', emoji: '🌪️', img: './image/swirl.png', desc: { id: 'Roti swirl kayu manis dengan lapisan gula, harum dan hangat.', en: 'Cinnamon sugar swirl pastry, aromatic and comforting.' } }
+  ];
+
+  /* ── Testimonials ───────────────────────────────── */
+  const testimonials = [
+    { name:'Jospin R.', role:{id:'Food Blogger', en:'Food Blogger'}, bg:'bg-blue-100', tc:'text-blue-700', text:{id:'Croissant-nya juara banget! Lembut di dalam, renyah di luar. Hampir tiap pagi saya mampir ke sini sebelum kerja. Worth every penny!', en:'This croissant is incredible! Soft inside, crispy outside. I stop by almost every morning before work. Worth every penny!'}, stars:5, initial:'J' },
+    { name:'Danica K.', role:{id:'Home Baker', en:'Home Baker'}, bg:'bg-[#F295B9]/15', tc:'text-[#F295B9]', text:{id:'Kromboloni raspberry-nya bikin nagih. Packaging-nya juga estetik banget, cocok buat oleh-oleh atau kado. Teman-teman suka semua!', en:'The raspberry kromboloni is addictive. The packaging is super aesthetic, perfect as a souvenir or gift. Everyone loved it!'}, stars:5, initial:'D' },
+    { name:'Anny P.', role:{id:'Pelanggan Setia', en:'Loyal Customer'}, bg:'bg-amber-100', tc:'text-amber-700', text:{id:'Delivery tepat waktu dan roti masih hangat pas sampai. Swirl cokelatnya enak banget, anak-anak langsung habis!', en:'Delivery was on time and the bread was still warm on arrival. The chocolate swirl was so good, the kids finished it immediately!'}, stars:5, initial:'A' },
+    { name:'Rizky M.', role:{id:'Chef Amatir', en:'Amateur Chef'}, bg:'bg-green-100', tc:'text-green-700', text:{id:'Sebagai orang yang suka masak, saya bisa bilang kualitas bahan di sini top tier. Croissant salmon-nya level bintang lima!', en:'As someone who loves cooking, I can say the ingredient quality here is top tier. The salmon croissant is five-star level!'}, stars:5, initial:'R' },
+    { name:'Sinta W.', role:{id:'Mahasiswi', en:'Student'}, bg:'bg-purple-100', tc:'text-purple-700', text:{id:'Cruffin vanila-nya jadi rekomendasi wajib gue ke semua teman. Harga terjangkau tapi rasanya premium banget.', en:'The vanilla cruffin is a must-recommend to all my friends. Affordable price but feels premium.'}, stars:5, initial:'S' },
+    { name:'Bagas T.', role:{id:'Pekerja Kantoran', en:'Office Worker'}, bg:'bg-orange-100', tc:'text-orange-700', text:{id:'Tiap hari Senin wajib beli Kromboloni matcha buat mood booster sebelum meeting. Udah jadi ritual mingguan!', en:'Every Monday I have to buy a matcha kromboloni as a mood booster before meetings. It has become a weekly ritual!'}, stars:5, initial:'B' },
+    { name:'Lila F.', role:{id:'Ibu Rumah Tangga', en:'Homemaker'}, bg:'bg-rose-100', tc:'text-rose-700', text:{id:'Anak-anak paling suka Swirl Cinnamon Roll-nya. Teksturnya lembut, aromanya harum banget. Oh My Dough! is our family go-to!', en:'The kids love the cinnamon roll swirl the most. It has a soft texture and such a fragrant aroma. Oh My Dough! is our family go-to!'}, stars:5, initial:'L' },
+    { name:'Hendra A.', role:{id:'Fotografer', en:'Photographer'}, bg:'bg-cyan-100', tc:'text-cyan-700', text:{id:'Selain enak dimakan, produknya juga photogenic banget! Sering gue jadiin konten IG. Response teman-teman selalu positif!', en:'Besides tasting great, the products are super photogenic! I often use them for IG content. Friends are always positive!'}, stars:5, initial:'H' },
+  ];
+
+  /* ── State ──────────────────────────────────────── */
+  let activeFilter = 'all', pmCurrentId = null, currentPage = 'home', currentLanguage = 'id';
+  const fmt = n => 'Rp ' + n.toLocaleString('id-ID');
+  const catLabel = c => {
+    const labels = {
+      cake: translations[currentLanguage]?.cat_cake || 'Cake',
+      'sweet-treats': translations[currentLanguage]?.cat_sweet_treats || 'Sweet Treats',
+      pastry: translations[currentLanguage]?.cat_pastry || 'Pastry',
+      doughnut: translations[currentLanguage]?.cat_doughnut || 'Donat',
+    };
+    return labels[c] || c;
+  };
+
+  const translations = {
+    id: {
+      nav_home: 'Home',
+      nav_about: 'Tentang Kami',
+      nav_career: 'Karir',
+      nav_download: 'Unduh Aplikasi',
+      order_app: 'Order in App',
+      hero_heading_part1: 'Happiness is Handcrafted ',
+      hero_heading_part2: 'Dough!',
+      hero_heading_part3: '',
+      hero_description: 'Karena setiap gigitan punya cerita. Nikmati varian donat estetik dan pastry artisan premium yang dibuat dengan penuh cinta khusus untuk bikin hari-harimu jadi lebih manis.',
+      hero_cta: 'Lihat Menu',
+      stats_variants: 'Varian Menu',
+      stats_rating: 'Rating',
+      stats_customers: 'Pelanggan',
+      about_label: 'Tentang Kami',
+      about_heading: 'Cerita kami dimulai dari meja kecil di dapur roti lokal.',
+      about_description: 'Oh My Dough! percaya bahwa roti terbaik lahir dari bahan alami, tangan yang terlatih, dan proses yang penuh perhatian. Kami berdedikasi menghidangkan roti artisan setiap hari dengan rasa yang konsisten dan nuansa hangat yang mengundang.',
+      about_adv1_title: '100% Bahan Alami',
+      about_adv1_desc: 'Kami hanya menggunakan bahan mentah alami, bebas pengawet dan pewarna sintetis.',
+      about_adv2_title: 'Dipanggang Segar',
+      about_adv2_desc: 'Semua rotinya dipanggang setiap hari di toko kami agar aroma dan tekstur tetap prima.',
+      about_adv3_title: 'Ramah Lingkungan',
+      about_adv3_desc: 'Kami mengoptimalkan bahan baku lokal dan kemasan yang lebih bijak demi bumi yang lebih sejuk.',
+      career_team_subheading: 'Team Story',
+      career_team_heading: 'Oh My Dough! Team Journey',
+      career_team_desc: 'Tim kami adalah gabungan antara pastri chef berpengalaman, barista kreatif, dan storyteller visual. Setiap hari kami bergerak bersama untuk menghadirkan roti yang tidak hanya lezat, tetapi juga punya cerita di baliknya.',
+      career_job1_type: 'Full-time',
+      career_job1_location: 'Jakarta Selatan',
+      career_job1_title: 'Barista Kreatif',
+      career_job1_desc: 'Bergabunglah dengan tim kami untuk menciptakan minuman kopi dan pengalaman bakery premium yang konsisten untuk setiap pelanggan.',
+      career_job2_type: 'Internship',
+      career_job2_location: 'Jakarta Selatan',
+      career_job2_title: 'Media & Konten Kreator',
+      career_job2_desc: 'Magang sambil berkarya, bantu kami membagikan cerita produk dan momen craft baking melalui foto, video, dan konten sosial media.',
+      career_apply_button: 'Lamar Sekarang',
+      career_apply_toast: 'Lamar sekarang!',
+      download_label: 'Unduh Aplikasi',
+      download_heading: 'Order lebih cepat lewat aplikasi Oh My Dough!',
+      download_desc: 'Nikmati pengalaman pesan yang lebih cepat, notifikasi promo eksklusif, dan pelacakan pesanan real-time langsung dari ponselmu.',
+      download_google: 'Google Play',
+      download_getit: 'Get it on',
+      download_appstore: 'App Store',
+      download_download: 'Download',
+      products_label: 'Menu Kami',
+      products_heading: 'Menu Andalan',
+      products_caption: 'Klik kartu untuk melihat detail produk',
+      filter_all: 'Semua',
+      filter_cake: 'Cake',
+      filter_sweet_treats: 'Sweet Treats',
+      filter_pastry: 'Pastry',
+      filter_doughnut: 'Donat',
+      cat_cake: 'Cake',
+      cat_sweet_treats: 'Sweet Treats',
+      cat_pastry: 'Pastry',
+      cat_doughnut: 'Donat',
+      why_label: 'Keunggulan Kami',
+      why_heading: 'Kenapa Pilih Oh My Dough!?',
+      why_description: 'Kami bukan sekadar bakery biasa. Setiap produk adalah hasil riset resep mendalam, bahan-bahan terpilih, dan teknik profesional.',
+      why_card1_title: 'Bahan Premium',
+      why_card1_desc: 'Tepung impor, mentega Prancis, dan bahan segar lokal terpilih — tidak ada kompromi dalam kualitas.',
+      why_card2_title: 'Selalu Segar',
+      why_card2_desc: 'Dipanggang mulai pukul 04.00 pagi setiap harinya agar sampai di tangan Anda dalam kondisi terbaik.',
+      why_card3_title: 'Delivery Cepat',
+      why_card3_desc: 'Estimasi pengiriman 45–90 menit ke area Jakarta & sekitarnya. Tepat waktu adalah janji kami.',
+      why_card4_title: 'Dibuat dengan Hati',
+      why_card4_desc: 'Setiap roti ditangani dengan tangan terampil. Bukan produksi massal — ini karya seni yang bisa dimakan.',
+      testimonials_label: 'Ulasan Pelanggan',
+      testimonials_heading: 'Kata Mereka',
+      contact_label: 'Hubungi Kami',
+      contact_heading: 'Ada yang ingin ditanyakan?',
+      contact_name_placeholder: 'Nama kamu',
+      contact_email_placeholder: 'Email',
+      contact_subject_placeholder: 'Subjek (opsional)',
+      contact_message_placeholder: 'Tulis pesanmu di sini...',
+      contact_submit: 'Kirim Pesan →',
+      contact_submit_success: '✓ Pesan Terkirim!',
+      footer_description: 'Menghadirkan roti artisan premium dengan bahan terbaik, dipanggang segar setiap hari untuk memanjakan lidah Anda.',
+      footer_nav_title: 'Navigasi',
+      footer_nav_home: 'Home',
+      footer_nav_products: 'Menu Produk',
+      footer_nav_why: 'Kenapa Kami',
+      footer_nav_testimonials: 'Ulasan Pelanggan',
+      footer_nav_contact: 'Kontak',
+      footer_contact_title: 'Hubungi Kami',
+      footer_contact_address: 'Jl. Bakeri No. 12, Jaksel',
+      footer_contact_phone: '+62 812-3456-7890',
+      footer_contact_email: 'breadcrumbs.id@gmail.com',
+      footer_contact_hours: '07.00 – 21.00 WIB',
+      product_detail_button: 'Lihat Detail',
+      cat_isian: 'Dengan Isian',
+      cat_kromboloni: 'Kromboloni',
+      cat_swirl: 'Swirl',
+      cat_cruffin: 'Cruffin',
+      faq_title: 'Pertanyaan Umum · FAQ',
+      faq_q1: 'Berapa lama ketahanan produk roti kami?',
+      faq_a1: 'Produk kami paling nikmat dikonsumsi dalam 1×24 jam setelah diterima. Untuk penyimpanan lebih lama, simpan dalam wadah kedap udara di kulkas (maks. 3 hari) atau freezer (maks. 7 hari). Hangatkan sebentar di oven/air fryer sebelum disantap.',
+      faq_q2: 'Bagaimana cara memesan produk?',
+      faq_a2: 'Untuk memesan, buka detail produk dan gunakan tombol "Pesan Lewat Aplikasi" untuk diarahkan ke aplikasi kami. Untuk pesanan catering (min. 50 pcs), hubungi kami via WhatsApp agar dapat diproses secara khusus.',
+      faq_q3: 'Metode pengiriman apa yang tersedia?',
+      faq_a3: 'Delivery — antar ke alamat Anda, area Jakarta & sekitarnya (est. 1–2 jam). Pickup — ambil langsung di Jl. Bakeri No. 12, Jaksel, Senin–Minggu 07.00–21.00 WIB. Ongkir dihitung berdasarkan jarak.',
+      faq_q4: 'Apakah pesanan bisa dibatalkan?',
+      faq_a4: 'Pembatalan dapat dilakukan paling lambat 30 menit setelah pembayaran dikonfirmasi, karena setelah itu proses produksi sudah dimulai. Segera hubungi CS kami via WhatsApp. Produk yang sudah diproduksi atau dalam pengiriman tidak bisa dibatalkan.',
+      faq_q5: 'Bagaimana cara menghubungi Customer Service?',
+      faq_a5: 'WhatsApp: +62 812-3456-7890 (Sen–Min, 08.00–20.00 WIB) Email: breadcrumbs.id@gmail.com Instagram: @breadcrumbs.id Rata-rata respons di bawah 1 jam pada jam kerja.',
+      terms_title: 'Terms of Use',
+      terms_intro: 'Dengan mengakses website ini, Anda menyetujui seluruh syarat yang berlaku di bawah ini.',
+      terms_item1_title: 'Penerimaan Syarat',
+      terms_item1_text: 'Penggunaan layanan website breadcrumbs.id tunduk pada syarat dan ketentuan yang berlaku. Kami berhak memperbarui ketentuan ini sewaktu-waktu tanpa pemberitahuan sebelumnya.',
+      terms_item2_title: 'Hak Kekayaan Intelektual',
+      terms_item2_text: 'Seluruh konten — termasuk teks, logo, desain, dan seluruh gambar produk — adalah hak milik eksklusif Oh My Dough! Bakery dan dilindungi hukum hak cipta. Penggandaan atau distribusi tanpa izin tertulis adalah tindakan yang dilarang.',
+      terms_item3_title: 'Harga Produk',
+      terms_item3_text: 'Harga produk dapat berubah sewaktu-waktu tanpa pemberitahuan. Harga yang berlaku adalah harga saat Anda menyelesaikan transaksi pembayaran.',
+      terms_item4_title: 'Batasan Tanggung Jawab',
+      terms_item4_text: 'Oh My Dough! Bakery tidak bertanggung jawab atas kerugian akibat keterlambatan di luar kendali kami, termasuk kondisi cuaca, kemacetan, atau gangguan sistem pihak ketiga.',
+      terms_footer_note: 'Terakhir diperbarui: Mei 2026 · Oh My Dough! Bakery, Jakarta Selatan',
+      cookie_title: 'Kebijakan Cookies',
+      cookie_intro: 'Website Oh My Dough! menggunakan cookies hanya untuk keperluan teknis guna memastikan pengalaman berbelanja Anda berjalan lancar.',
+      cookie_item1_title: 'Data Keranjang Belanja',
+      cookie_item1_text: 'Menyimpan item yang Anda tambahkan agar tidak hilang saat halaman di-refresh.',
+      cookie_item2_title: 'Preferensi Sesi',
+      cookie_item2_text: 'Mengingat pilihan metode pengiriman selama sesi berlangsung.',
+      cookie_notice_title: 'Yang TIDAK kami lakukan',
+      cookie_notice_text: 'Kami tidak menggunakan cookies untuk iklan, pelacakan lintas situs, atau menjual data Anda kepada pihak ketiga.',
+      cookie_cleanup_title: 'Cara menghapus cookies via browser:',
+      cookie_cleanup_chrome: 'Setelan → Privasi & Keamanan → Hapus Data Penjelajahan',
+      cookie_cleanup_safari: 'Preferensi → Privasi → Kelola Data Website',
+      cookie_cleanup_firefox: 'Opsi → Privasi & Keamanan → Cookies dan Data Situs',
+      cookie_footer_note: 'Terakhir diperbarui: Mei 2026 · Oh My Dough! Bakery',
+      cookie_banner_title: 'Persetujuan Cookies',
+      cookie_banner_text1: 'Website ini menggunakan cookies teknis untuk menyimpan data keranjang belanja dan memastikan pengalaman berbelanja yang lancar.',
+      cookie_banner_text2: 'Kami tidak menggunakan cookies pelacak atau iklan.',
+      cookie_reject: 'Tolak',
+      cookie_accept: 'Terima',
+      bottom_terms: 'TERM OF USE',
+      bottom_faq: 'FAQ',
+      bottom_cookies: 'COOKIES',
+      footer_copyright: '©2026 Oh My Dough! Bakery · All rights reserved'
+    },
+    en: {
+      nav_home: 'Home',
+      nav_about: 'About',
+      nav_career: 'Career',
+      nav_download: 'Download App',
+      order_app: 'Order in App',
+      hero_heading_part1: 'Happiness is Handcrafted ',
+      hero_heading_part2: 'Dough!',
+      hero_heading_part3: '',
+      hero_description: 'Every bite tells a story. Enjoy aesthetic doughnut varieties and premium artisan pastries made with love to sweeten your day.',
+      hero_cta: 'See Menu',
+      stats_variants: 'Menu Varieties',
+      stats_rating: 'Rating',
+      stats_customers: 'Customers',
+      about_label: 'About Us',
+      about_heading: 'Our story began from a small bakery table.',
+      about_description: 'Oh My Dough! believes the best bread comes from natural ingredients, skilled hands, and a thoughtful baking process. We are committed to serving artisan bread daily with consistent flavor and inviting warmth.',
+      about_adv1_title: '100% Natural Ingredients',
+      about_adv1_desc: 'We use only natural ingredients, free from preservatives and synthetic colors.',
+      about_adv2_title: 'Freshly Baked',
+      about_adv2_desc: 'All our bread is baked daily in-house so aroma and texture remain at their best.',
+      about_adv3_title: 'Eco Friendly',
+      about_adv3_desc: 'We optimize local sourcing and smarter packaging for a cooler planet.',
+      career_team_subheading: 'Team Story',
+      career_team_heading: 'Oh My Dough! Team Journey',
+      career_team_desc: 'Our team blends experienced pastry chefs, creative baristas, and visual storytellers. Every day we move together to craft bread that is not only delicious but also meaningful.',
+      career_job1_type: 'Full-time',
+      career_job1_location: 'South Jakarta',
+      career_job1_title: 'Creative Barista',
+      career_job1_desc: 'Join our team to create coffee drinks and premium bakery experiences that delight every guest.',
+      career_job2_type: 'Internship',
+      career_job2_location: 'South Jakarta',
+      career_job2_title: 'Media & Content Creator',
+      career_job2_desc: 'Intern with us while helping share product stories and bakery moments through photo, video, and social content.',
+      career_apply_button: 'Apply Now',
+      career_apply_toast: 'Apply now!',
+      download_label: 'Download App',
+      download_heading: 'Order faster with the Oh My Dough! app',
+      download_desc: 'Enjoy faster ordering, exclusive promo notifications, and real-time order tracking directly from your phone.',
+      download_google: 'Google Play',
+      download_getit: 'Get it on',
+      download_appstore: 'App Store',
+      download_download: 'Download',
+      products_label: 'Our Menu',
+      products_heading: 'Featured Favorites',
+      products_caption: 'Tap a card to view product details',
+      filter_all: 'All',
+      filter_cake: 'Cake',
+      filter_sweet_treats: 'Sweet Treats',
+      filter_croissant: 'Croissant',
+      filter_doughnut: 'Doughnut',
+      cat_cake: 'Cake',
+      cat_sweet_treats: 'Sweet Treats',
+      cat_croissant: 'Croissant',
+      cat_doughnut: 'Doughnut',
+      why_label: 'Our Advantages',
+      why_heading: 'Why Choose Oh My Dough!?',
+      why_description: 'We are not just an ordinary bakery. Every product is the result of deep recipe research, carefully selected ingredients, and professional techniques.',
+      why_card1_title: 'Premium Ingredients',
+      why_card1_desc: 'Imported flour, French butter, and selected fresh local ingredients — no compromises on quality.',
+      why_card2_title: 'Freshly Baked',
+      why_card2_desc: 'All bread is baked daily in-store so the aroma and texture stay at their best.',
+      why_card3_title: 'Fast Delivery',
+      why_card3_desc: 'Estimated delivery in 45–90 minutes across Jakarta and surrounding areas. Timeliness is our promise.',
+      why_card4_title: 'Made with Heart',
+      why_card4_desc: 'Every loaf is handled by skilled hands. Not mass-produced — this is edible art.',
+      testimonials_label: 'Customer Reviews',
+      testimonials_heading: 'What They Say',
+      contact_label: 'Contact Us',
+      contact_heading: 'Have a question?',
+      contact_name_placeholder: 'Your name',
+      contact_email_placeholder: 'Email',
+      contact_subject_placeholder: 'Subject (optional)',
+      contact_message_placeholder: 'Write your message here...',
+      contact_submit: 'Send Message →',
+      contact_submit_success: '✓ Message Sent!',
+      footer_description: 'Serving premium artisan bread with the best ingredients, freshly baked every day to delight your taste buds.',
+      footer_nav_title: 'Navigation',
+      footer_nav_home: 'Home',
+      footer_nav_products: 'Product Menu',
+      footer_nav_why: 'Why Us',
+      footer_nav_testimonials: 'Customer Reviews',
+      footer_nav_contact: 'Contact',
+      footer_contact_title: 'Contact Us',
+      footer_contact_address: 'Jl. Bakeri No. 12, Jaksel',
+      footer_contact_phone: '+62 812-3456-7890',
+      footer_contact_email: 'breadcrumbs.id@gmail.com',
+      footer_contact_hours: '07.00 – 21.00 WIB',
+      product_detail_button: 'View Details',
+      cat_isian: 'Filled',
+      cat_kromboloni: 'Kromboloni',
+      cat_swirl: 'Swirl',
+      cat_cruffin: 'Cruffin',
+      faq_title: 'Frequently Asked Questions · FAQ',
+      faq_q1: 'How long do our baked products last?',
+      faq_a1: 'Our products taste best consumed within 24 hours after receipt. For longer storage, keep them in an airtight container in the fridge (max 3 days) or freezer (max 7 days). Warm briefly in the oven/air fryer before eating.',
+      faq_q2: 'How can I order products?',
+      faq_a2: 'To order, open the product details and use the "Order in App" button to be directed to our app. For catering orders (min. 50 pcs), contact us via WhatsApp for special processing.',
+      faq_q3: 'What delivery methods are available?',
+      faq_a3: 'Delivery — to your address, Jakarta and surrounding areas (est. 1–2 hours). Pickup — collect directly at Jl. Bakeri No. 12, Jaksel, Monday–Sunday 07.00–21.00 WIB. Shipping costs are calculated based on distance.',
+      faq_q4: 'Can orders be canceled?',
+      faq_a4: 'Cancellations can be made no later than 30 minutes after payment is confirmed, as production begins after that. Contact our CS via WhatsApp immediately. Products already in production or delivery cannot be canceled.',
+      faq_q5: 'How do I contact Customer Service?',
+      faq_a5: 'WhatsApp: +62 812-3456-7890 (Mon–Sun, 08.00–20.00 WIB) Email: breadcrumbs.id@gmail.com Instagram: @breadcrumbs.id Average response time is under 1 hour during business hours.',
+      terms_title: 'Terms of Use',
+      terms_intro: 'By accessing this website, you agree to the terms set forth below.',
+      terms_item1_title: 'Acceptance of Terms',
+      terms_item1_text: 'Use of the breadcrumbs.id website services is subject to the applicable terms and conditions. We reserve the right to update these terms at any time without prior notice.',
+      terms_item2_title: 'Intellectual Property Rights',
+      terms_item2_text: 'All content — including text, logos, design, and product images — is the exclusive property of Oh My Dough! Bakery and is protected by copyright law. Reproduction or distribution without written permission is prohibited.',
+      terms_item3_title: 'Product Pricing',
+      terms_item3_text: 'Product prices may change at any time without notice. The applicable price is the one at the time you complete payment.',
+      terms_item4_title: 'Limitation of Liability',
+      terms_item4_text: 'Oh My Dough! Bakery is not responsible for losses due to delays beyond our control, including weather conditions, traffic, or third-party system disruptions.',
+      terms_footer_note: 'Last updated: May 2026 · Oh My Dough! Bakery, South Jakarta',
+      cookie_title: 'Cookie Policy',
+      cookie_intro: 'The Oh My Dough! website uses cookies only for technical purposes to ensure your shopping experience is smooth.',
+      cookie_item1_title: 'Shopping Cart Data',
+      cookie_item1_text: 'Stores items you add so they are not lost when the page refreshes.',
+      cookie_item2_title: 'Session Preferences',
+      cookie_item2_text: 'Remembers your chosen delivery method during the session.',
+      cookie_notice_title: 'What we DO NOT do',
+      cookie_notice_text: 'We do not use cookies for advertising, cross-site tracking, or selling your data to third parties.',
+      cookie_cleanup_title: 'How to delete cookies via browser:',
+      cookie_cleanup_chrome: 'Settings → Privacy & Security → Clear Browsing Data',
+      cookie_cleanup_safari: 'Preferences → Privacy → Manage Website Data',
+      cookie_cleanup_firefox: 'Options → Privacy & Security → Cookies and Site Data',
+      cookie_footer_note: 'Last updated: May 2026 · Oh My Dough! Bakery',
+      cookie_banner_title: 'Cookie Consent',
+      cookie_banner_text1: 'This website uses technical cookies to store shopping cart data and ensure a smooth shopping experience.',
+      cookie_banner_text2: 'We do not use tracking or advertising cookies.',
+      cookie_reject: 'Reject',
+      cookie_accept: 'Accept',
+      bottom_terms: 'TERM OF USE',
+      bottom_faq: 'FAQ',
+      bottom_cookies: 'COOKIES',
+      footer_copyright: '©2026 Oh My Dough! Bakery · All rights reserved'
+    }
+  };
+
+  function applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (translations[currentLanguage] && translations[currentLanguage][key]) {
+        el.textContent = translations[currentLanguage][key];
+      }
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      if (translations[currentLanguage] && translations[currentLanguage][key]) {
+        el.placeholder = translations[currentLanguage][key];
+      }
+    });
+    updateLanguageUI();
+    renderProducts();
+    buildTesti();
+  }
+
+  function updateLanguageUI() {
+    // Desktop lang pills
+    document.getElementById('lang-en').classList.toggle('active-lang', currentLanguage === 'en');
+    document.getElementById('lang-id').classList.toggle('active-lang', currentLanguage === 'id');
+    // Mobile lang pills
+    const mobileEn = document.getElementById('mobile-lang-en');
+    const mobileId = document.getElementById('mobile-lang-id');
+    if (mobileEn && mobileId) {
+      mobileEn.classList.toggle('active-lang', currentLanguage === 'en');
+      mobileId.classList.toggle('active-lang', currentLanguage === 'id');
+    }
+  }
+
+  function changeLanguage(lang) {
+    currentLanguage = lang;
+    applyTranslations();
+  }
+
+  function setActiveNav(pageId) {
+    document.querySelectorAll('[data-nav]').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-nav') === pageId);
+    });
+    document.querySelectorAll('.mobile-link').forEach(btn => {
+      const nav = btn.getAttribute('onclick') || '';
+      const match = nav.match(/navigateTo\('([^']+)'\)/);
+      if (match) btn.classList.toggle('active', match[1] === pageId);
+    });
+  }
+
+  function hideAllPages() {
+    document.querySelectorAll('[data-page="home"]').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('#page-about, #page-career, #page-download').forEach(el => el.classList.add('hidden'));
+  }
+
+  function navigateTo(pageId) {
+    if (currentPage === pageId) return;
+    currentPage = pageId;
+    setActiveNav(pageId);
+    const skeleton = document.getElementById('page-skeleton');
+    hideAllPages();
+    skeleton.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      skeleton.classList.add('hidden');
+      if (pageId === 'home') {
+        document.querySelectorAll('[data-page="home"]').forEach(el => el.classList.remove('hidden'));
+      } else {
+        const target = document.getElementById(`page-${pageId}`);
+        if (target) target.classList.remove('hidden');
+      }
+    }, 600);
+  }
+
+  function initRouting() {
+    applyTranslations();
+    setActiveNav('home');
+  }
+
+  /* ── Render products ────────────────────────────── */
+  function renderProducts() {
+    const grid = document.getElementById('products-grid');
+    const list = activeFilter === 'all' ? products : products.filter(p => p.cat === activeFilter);
+    grid.innerHTML = list.map(p => {
+      const productName = p.name[currentLanguage] || p.name.id;
+      return `
+    <div class="product-card" onclick="openProductModal(${p.id})">
+      <div class="card-img-wrap">
+        <img
+          src="${p.img}"
+          alt="${productName}"
+          class="card-img"
+          onerror="this.style.display='none'"
+        />
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">${productName}</h3>
+        <p class="card-price">${fmt(p.price)}</p>
+      </div>
+      <div class="card-foot">
+        <button
+          class="btn-order"
+          onclick="event.stopPropagation(); openProductModal(${p.id})"
+        >
+          + ${translations[currentLanguage]?.product_detail_button || 'Lihat Detail'}
+        </button>
+      </div>
+    </div>`;
+    }).join('');
+  }
+
+  document.getElementById('filter-btns').addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn'); if (!btn) return;
+    activeFilter = btn.dataset.cat;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderProducts();
+  });
+
+  /* ── Product Modal ──────────────────────────────── */
+  function openProductModal(id) {
+    const p = products.find(x => x.id === id); if (!p) return;
+    pmCurrentId = id;
+    const img = document.getElementById('pm-img');
+    const ph  = document.getElementById('pm-ph');
+    const productName = p.name[currentLanguage] || p.name.id;
+    const productDesc = p.desc[currentLanguage] || p.desc.id;
+    img.classList.remove('loaded');
+    // prefer full-size WebP for modal if available; keep original PNG as fallback
+    img.dataset.src = p.img.replace(/\.(png|jpg|jpeg)$/i, '.webp');
+    img.dataset.orig = p.img;
+    img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+    img.alt = productName;
+    img.style.display = 'block'; ph.style.display = 'none'; ph.textContent = p.emoji;
+    // trigger lazy loader for modal image
+    if (typeof loadImage === 'function') loadImage(img); else { img.src = p.img; }
+    document.getElementById('pm-badge').textContent = catLabel(p.cat);
+    document.getElementById('pm-name').textContent = productName;
+    document.getElementById('pm-price').textContent = fmt(p.price);
+    document.getElementById('pm-desc').textContent = productDesc;
+    openModal('product-modal');
+  }
+
+
+  /* ── Toast ──────────────────────────────────────── */
+  let toastT;
+  function showToast(msg) {
+    let t = document.getElementById('global-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'global-toast';
+      t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);z-index:90;background:#0f2878;color:#fff;padding:11px 22px;border-radius:999px;font-family:Poppins,sans-serif;font-weight:700;font-size:13px;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.2);opacity:0;transition:opacity .22s,transform .25s;pointer-events:none;';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    requestAnimationFrame(() => { t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)'; });
+    clearTimeout(toastT);
+    toastT = setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(20px)'; }, 2400);
+  }
+
+  /* Cart logic removed for static catalog */
+
+  // Cart/opening/payment functions removed for static catalog
+
+  /* ── Modals ─────────────────────────────────────── */
+  function openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow=''; if (id === 'product-modal') { const img = document.getElementById('pm-img'); if (img) { img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='; img.removeAttribute('data-src'); img.removeAttribute('data-orig'); img.classList.remove('loaded'); } } }
+  document.querySelectorAll('.modal-wrap').forEach(m => m.addEventListener('click', e => { if (e.target===m) closeModal(m.id); }));
+
+  /* ── Mobile menu ─────────────────────────────────── */
+  function openMobileMenu() { document.getElementById('mobile-menu').classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeMobileMenu() { document.getElementById('mobile-menu').classList.remove('open'); document.body.style.overflow=''; }
+
+  /* ── Cookie ──────────────────────────────────────── */
+  function acceptCookies() { localStorage.setItem('bc_cookies','accepted'); document.getElementById('cookie-banner').classList.remove('show'); }
+  function rejectCookies() { localStorage.setItem('bc_cookies','rejected'); document.getElementById('cookie-banner').classList.remove('show'); }
+
+  /* ── Contact form ────────────────────────────────── */
+  function handleContactSubmit(e, form) {
+    e.preventDefault();
+    const btn = document.getElementById('contact-btn');
+    btn.textContent = translations[currentLanguage]?.contact_submit_success || '✓ Pesan Terkirim!';
+    btn.style.background='#16a34a';
+    setTimeout(() => {
+      btn.textContent = translations[currentLanguage]?.contact_submit || 'Kirim Pesan →';
+      btn.style.background='';
+      form.reset();
+    }, 3000);
+  }
+
+  /* ── Testimonials slider ─────────────────────────── */
+  let testiIdx = 0;
+  const getTPP = () => window.innerWidth < 640 ? 1 : window.innerWidth < 1024 ? 2 : 3;
+
+  function buildTesti() {
+    const tpp = getTPP(), pages = Math.ceil(testimonials.length/tpp);
+    const track = document.getElementById('testi-track');
+    const dots  = document.getElementById('testi-dots');
+    track.innerHTML = testimonials.map(t => {
+      const testimonialText = t.text[currentLanguage] || t.text.id;
+      const testimonialRole = t.role?.[currentLanguage] || t.role?.id || t.role;
+      return `
+      <div class="testi-card" style="width:calc((100% - ${(tpp-1)*20}px) / ${tpp})">
+        <div>
+          <div class="text-amber-400 text-xs sm:text-sm mb-3 tracking-wide">${'★'.repeat(t.stars)}</div>
+          <p class="text-xs sm:text-sm text-gray-600 leading-relaxed italic mb-5">"${testimonialText}"</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 ${t.bg} ${t.tc} rounded-full flex items-center justify-center pop font-bold text-xs sm:text-sm flex-shrink-0">${t.initial}</div>
+          <div><p class="pop font-bold text-xs text-gray-900">${t.name}</p><p class="text-[10px] text-gray-400 mt-0.5">${testimonialRole}</p></div>
+        </div>
+      </div>`;
+    }).join('');
+    dots.innerHTML = Array.from({length:pages},(_,i)=>
+      `<button onclick="goTesti(${i})" class="testi-dot rounded-full transition-all cursor-pointer ${i===0?'bg-blue-700 w-6 h-2':'bg-gray-300 w-2 h-2'}"></button>`
+    ).join('');
+    testiIdx = 0; applyTesti();
+  }
+
+  function applyTesti() {
+    const tpp = getTPP(), pages = Math.ceil(testimonials.length/tpp);
+    testiIdx = Math.max(0, Math.min(testiIdx, pages-1));
+    const cw = document.querySelector('.testi-card')?.offsetWidth || 0;
+    document.getElementById('testi-track').style.transform = `translateX(-${testiIdx*tpp*(cw+20)}px)`;
+    document.querySelectorAll('.testi-dot').forEach((d,i) => {
+      d.className = `testi-dot rounded-full transition-all cursor-pointer ${i===testiIdx?'bg-blue-700 w-6 h-2':'bg-gray-300 w-2 h-2'}`;
+    });
+  }
+
+  function slideTesti(d) { testiIdx += d; applyTesti(); }
+  function goTesti(i) { testiIdx = i; applyTesti(); }
+  window.addEventListener('resize', buildTesti);
+
+  /* ── Scroll effects ──────────────────────────────── */
+  const scrollTop = document.getElementById('scroll-top');
+  const siteHeader = document.getElementById('site-header');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    scrollTop.classList.toggle('visible', y > 400);
+    siteHeader.classList.toggle('scrolled', y > 20);
+  }, {passive:true});
+
+  /* ── Reveal on scroll ────────────────────────────── */
+  const revealObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  /* ── QR grid visual ──────────────────────────────── */
+  const qrGrid = document.getElementById('qr-grid');
+  if (qrGrid) { for (let i=0;i<49;i++) { const c=document.createElement('div'); c.style.cssText=`width:100%;aspect-ratio:1;border-radius:1px;background:${Math.random()>.45?'#1e3a8a':'transparent'}`; qrGrid.appendChild(c); } }
+  /* ── Lazy image loader + IntersectionObserver ────── */
+  const lazyPlaceholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+  // try to load pre-generated tiny placeholders
+  window.IMAGE_LQIPS = window.IMAGE_LQIPS || {};
+  fetch('image/image-placeholders.json').then(r=>{ if(r.ok) return r.json(); throw new Error('no placeholders'); }).then(j=>{ window.IMAGE_LQIPS = j; }).catch(()=>{/* no placeholders available */});
+
+  function loadImage(el){
+    if(!el) return;
+    const src = el.dataset?.src || el.getAttribute('data-src');
+    if(!src) return;
+    // set a tiny LQIP if available, otherwise a 1px gif
+    try{
+      const base = (src.match(/([^\/]+)(?=\.[^.]+$)/) || [])[0];
+      if (window.IMAGE_LQIPS && window.IMAGE_LQIPS[base]) el.src = window.IMAGE_LQIPS[base];
+      else el.src = lazyPlaceholder;
+    }catch(e){ el.src = lazyPlaceholder; }
+    // load full image off-DOM and swap when ready
+    const tmp = new Image();
+    tmp.src = src;
+    tmp.onload = () => { el.src = src; el.classList.add('loaded'); };
+    tmp.onerror = () => { el.src = el.dataset?.orig || src; el.classList.add('loaded'); };
+    el.removeAttribute('data-src');
+  }
+  const lazyObserver = ('IntersectionObserver' in window) ? new IntersectionObserver((entries, obs) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { loadImage(e.target); obs.unobserve(e.target); }
+    });
+  }, { rootMargin: '200px 0px', threshold: 0.01 }) : null;
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('img.lazy').forEach(img => {
+      if (lazyObserver) lazyObserver.observe(img); else loadImage(img);
+    });
+  });
+  // also run immediately in case the script executes after DOMContentLoaded
+  (function(){ document.querySelectorAll('img.lazy').forEach(img => { if (lazyObserver) lazyObserver.observe(img); else loadImage(img); }); })();
+
+  /* ── Init ────────────────────────────────────────── */
+  initRouting();
+  renderProducts();
+  // Ensure images added by `renderProducts` are observed by the lazy loader
+  document.querySelectorAll('img.lazy').forEach(img => {
+    if (lazyObserver) lazyObserver.observe(img); else loadImage(img);
+  });
+  buildTesti();
+
+  /* ── Cookie banner auto-show ─────────────────────── */
+  window.addEventListener('load', () => {
+    if (!localStorage.getItem('bc_cookies')) setTimeout(() => document.getElementById('cookie-banner').classList.add('show'), 1200);
+  });
+
+  /* ── Promo Carousel Vue 3 App (autoplay) ────────── */
+  if (document.getElementById('promo-app') && typeof Vue !== 'undefined') {
+    Vue.createApp({
+      data() {
+        return {
+          promoImages: ['./image/promo1.png','./image/promo2.png','./image/promo3.png'],
+          currentIndex: 0,
+          intervalId: null
+        };
+      },
+      mounted() {
+        // autoplay every 3 seconds
+        this.intervalId = setInterval(() => {
+          this.currentIndex = (this.currentIndex + 1) % this.promoImages.length;
+        }, 2000);
+      },
+      beforeUnmount() {
+        clearInterval(this.intervalId);
+      },
+      methods: {
+        goTo(i) { this.currentIndex = i; }
+      }
+    }).mount('#promo-app');
+  }
+</script>
+</body>
+</html>
