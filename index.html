@@ -202,8 +202,15 @@
     }
     .mobile-close-btn:hover { background: #fee2e2; color: #ef4444; }
 
+    /* Cart badge styles removed for static catalog */
+
     /* ── Hero badge pill ───────────────────────────── */
     .hero-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: var(--blue); color: #fff; border-radius: 999px; font-family:'Poppins',sans-serif; font-weight: 700; font-size: .7rem; letter-spacing: .04em; }
+    .hero-heading { padding-top: 0; padding-bottom: 0; line-height: 1.18 !important; }
+    .hero-heading > span { display: inline !important; line-height: inherit !important; margin: 0 !important; padding: 0 !important; }
+    @media (min-width:1024px) { .hero-heading { padding-top: 0; padding-bottom: 0; line-height: 1.35 !important; }
+      .hero-heading > span { display: block !important; }
+    }
 
     /* ── Product card ──────────────────────────────── */
     .product-card {
@@ -346,9 +353,8 @@
     .section-label { display: inline-flex; align-items: center; gap: 7px; padding: 5px 14px; background: var(--blue-l); border-radius: 999px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: clamp(0.6rem, 2vw, 0.75rem); color: var(--blue); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 12px; }
 
     /* Input focus ring */
-    input:focus, textarea:focus { outline: none; border-color: var(--blue) !important; box-shadow: 0 0 0 3px rgba(30,64,175,.1); }
-    button:focus, .filter-btn:focus, .btn-order:focus, .mobile-link:focus, .product-card:focus, .modal-box:focus { outline: none !important; box-shadow: none !important; }
-    button:focus-visible, .filter-btn:focus-visible, .btn-order:focus-visible, .mobile-link:focus-visible, .product-card:focus-visible, .modal-box:focus-visible { outline: none !important; box-shadow: none !important; }
+    input:focus, textarea:focus { border-color: var(--blue) !important; box-shadow: 0 0 0 3px rgba(30,64,175,.1); }
+    button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid rgba(30,64,175,.35) !important; outline-offset: 3px; }
 
     /* Smooth image loading */
     img { display: block; }
@@ -498,7 +504,7 @@
             <span class="pop font-semibold text-sm text-gray-900 pr-4" data-i18n="faq_q5">Bagaimana cara menghubungi Customer Service?</span>
             <svg class="faq-chevron w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
           </summary>
-          <div class="px-5 pb-5 pt-3 text-sm text-gray-500 leading-relaxed border-t border-gray-100 bg-gray-50/50" data-i18n="faq_a5">WhatsApp: +62 812-3456-7890 (Sen–Min, 08.00–20.00 WIB) Email: breadcrumbs.id@gmail.com Instagram: @breadcrumbs.id Rata-rata respons di bawah 1 jam pada jam kerja.</div>
+          <div class="px-5 pb-5 pt-3 text-sm text-gray-500 leading-relaxed border-t border-gray-100 bg-gray-50/50" data-i18n="faq_a5">WhatsApp: +62 812-3456-7890 (Sen–Min, 08.00–20.00 WIB) Email: contact@ohmydough.com Instagram: @ohmydough Rata-rata respons di bawah 1 jam pada jam kerja.</div>
         </details>
       </div>
     </div>
@@ -518,7 +524,7 @@
       </div>
       <div>
         <h4 class="pop font-bold text-gray-900 mb-2 flex items-center gap-2"><span class="w-5 h-5 bg-blue-700 rounded-full text-white text-[10px] flex items-center justify-center flex-shrink-0 pop font-bold">1</span> <span data-i18n="terms_item1_title">Penerimaan Syarat</span></h4>
-        <p class="pl-7" data-i18n="terms_item1_text">Penggunaan layanan website breadcrumbs.id tunduk pada syarat dan ketentuan yang berlaku. Kami berhak memperbarui ketentuan ini sewaktu-waktu tanpa pemberitahuan sebelumnya.</p>
+        <p class="pl-7" data-i18n="terms_item1_text">Penggunaan layanan website Oh My Dough! tunduk pada syarat dan ketentuan yang berlaku. Kami berhak memperbarui ketentuan ini sewaktu-waktu tanpa pemberitahuan sebelumnya.</p>
       </div>
       <div>
         <h4 class="pop font-bold text-gray-900 mb-2 flex items-center gap-2"><span class="w-5 h-5 bg-blue-700 rounded-full text-white text-[10px] flex items-center justify-center flex-shrink-0 pop font-bold">2</span> <span data-i18n="terms_item2_title">Hak Kekayaan Intelektual</span></h4>
@@ -615,15 +621,17 @@
 
 <!-- ════════════════════════ HERO ════════════════════ -->
 <section id="home-page" data-page="home" class="max-w-7xl mx-auto px-4 sm:px-6 py-12 lg:py-16 grid lg:grid-cols-12 gap-10 items-center">
-  <div class="lg:col-span-5 space-y-6">
+  <div class="lg:col-span-5 space-y-4">
     <span class="hero-badge">Fresh Setiap Pagi</span>
-    <h1 class="pop text-2xl sm:text-3xl lg:text-[3.2rem] font-extrabold text-gray-900 tracking-tight leading-[1.15]">
-      Happiness is <span class="text-blue-700">Handcrafted</span> <span class="text-[#F295B9]">Dough!</span>
+    <h1 class="hero-heading pop text-2xl sm:text-3xl lg:text-[3.2rem] font-extrabold text-gray-900 tracking-tight mt-0 mb-0">
+      <span>Happiness is</span>
+      <span class="text-blue-700">Handcrafted</span>
+      <span class="text-[#F295B9]">Dough!</span>
     </h1>
     <p class="text-gray-500 text-sm sm:text-base leading-relaxed max-w-md">Karena setiap gigitan punya cerita. Nikmati varian donat estetik dan pastry artisan premium yang dibuat dengan penuh cinta khusus untuk bikin hari-harimu jadi lebih manis.</p>
     <!-- Stats row -->
     <div class="flex gap-6 py-2">
-      <div><p class="stat-num">50<span class="text-blue-400 text-xl">+</span></p><p class="text-xs text-gray-400 mt-1 font-medium" data-i18n="stats_variants">Varian Menu</p></div>
+      <div><p class="stat-num">10<span class="text-blue-400 text-xl">+</span></p><p class="text-xs text-gray-400 mt-1 font-medium" data-i18n="stats_variants">10+</p></div>
       <div class="w-px bg-gray-200"></div>
       <div><p class="stat-num">4.9<span class="text-gold text-xl">★</span></p><p class="text-xs text-gray-400 mt-1 font-medium" data-i18n="stats_rating">Rating</p></div>
       <div class="w-px bg-gray-200"></div>
@@ -809,6 +817,8 @@
   <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6" id="products-grid"></div>
 </section>
 
+<!-- `why-us` section removed -->
+
 <!-- ════════════════════════ TESTIMONIALS ════════════ -->
 <section id="testimonials" data-page="home" class="max-w-7xl mx-auto px-4 sm:px-6 py-14">
   <div class="flex items-end justify-between mb-10 reveal">
@@ -840,13 +850,15 @@
         <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900">Let's Taste the Happiness</h2>
         <p class="text-xs sm:text-sm text-slate-600 max-w-xl">Tinggalkan pesan untuk kami. Tim Oh My Dough! siap membantu pertanyaan pesanan, event, dan kolaborasi manis Anda.</p>
       </div>
-      <form class="space-y-4" onsubmit="event.preventDefault();">
+      <form class="space-y-4" onsubmit="handleContactSubmit(event, this)">
         <div class="grid gap-4">
-          <input type="text" name="name" placeholder="Nama" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm text-slate-800 placeholder-slate-400 transition focus:border-[#F295B9] focus:ring-2 focus:ring-[#F295B9]/30 outline-none" />
-          <input type="email" name="email" placeholder="Email" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm text-slate-800 placeholder-slate-400 transition focus:border-[#F295B9] focus:ring-2 focus:ring-[#F295B9]/30 outline-none" />
-          <textarea name="message" rows="5" placeholder="Pesan" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm text-slate-800 placeholder-slate-400 transition focus:border-[#F295B9] focus:ring-2 focus:ring-[#F295B9]/30 outline-none resize-none"></textarea>
+          <input id="contact-name" type="text" name="name" placeholder="Nama" required autocomplete="name" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm text-slate-800 placeholder-slate-400 transition focus:border-[#F295B9] focus:ring-2 focus:ring-[#F295B9]/30 outline-none" />
+          <input id="contact-email" type="email" name="email" placeholder="Email" required autocomplete="email" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm text-slate-800 placeholder-slate-400 transition focus:border-[#F295B9] focus:ring-2 focus:ring-[#F295B9]/30 outline-none" />
+          <textarea id="contact-message" name="message" rows="5" placeholder="Pesan" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm text-slate-800 placeholder-slate-400 transition focus:border-[#F295B9] focus:ring-2 focus:ring-[#F295B9]/30 outline-none resize-none"></textarea>
         </div>
-        <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#1E40AF] text-white font-semibold rounded-2xl shadow-lg shadow-[#1E40AF]/15 transition hover:bg-[#162f7d] hover:-translate-y-0.5">Kirim Pesan</button>
+        <button id="contact-btn" type="submit" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#1E40AF] text-white font-semibold rounded-2xl shadow-lg shadow-[#1E40AF]/15 transition hover:bg-[#162f7d] hover:-translate-y-0.5" data-i18n="contact_submit">
+          Kirim Pesan →
+        </button>
       </form>
     </div>
 
@@ -892,7 +904,7 @@
         <div class="space-y-2 text-xs text-blue-300">
           <p data-i18n="footer_contact_address">Jl. Bakeri No. 12, Jaksel</p>
           <p data-i18n="footer_contact_phone">+62 812-3456-7890</p>
-          <p data-i18n="footer_contact_email">breadcrumbs.id@gmail.com</p>
+          <p data-i18n="footer_contact_email">contact@ohmydough.com</p>
           <p data-i18n="footer_contact_hours">07.00 – 21.00 WIB</p>
         </div>
         <div class="flex flex-wrap justify-center md:justify-start gap-4 mt-6 md:mt-8">
@@ -979,7 +991,7 @@
       hero_heading_part3: '',
       hero_description: 'Karena setiap gigitan punya cerita. Nikmati varian donat estetik dan pastry artisan premium yang dibuat dengan penuh cinta khusus untuk bikin hari-harimu jadi lebih manis.',
       hero_cta: 'Lihat Menu',
-      stats_variants: 'Varian Menu',
+      stats_variants: '10+',
       stats_rating: 'Rating',
       stats_customers: 'Pelanggan',
       about_label: 'Tentang Kami',
@@ -1054,7 +1066,7 @@
       footer_contact_title: 'Hubungi Kami',
       footer_contact_address: 'Jl. Bakeri No. 12, Jaksel',
       footer_contact_phone: '+62 812-3456-7890',
-      footer_contact_email: 'breadcrumbs.id@gmail.com',
+      footer_contact_email: 'contact@ohmydough.com',
       footer_contact_hours: '07.00 – 21.00 WIB',
       product_detail_button: 'Lihat Detail',
       cat_isian: 'Dengan Isian',
@@ -1071,11 +1083,11 @@
       faq_q4: 'Apakah pesanan bisa dibatalkan?',
       faq_a4: 'Pembatalan dapat dilakukan paling lambat 30 menit setelah pembayaran dikonfirmasi, karena setelah itu proses produksi sudah dimulai. Segera hubungi CS kami via WhatsApp. Produk yang sudah diproduksi atau dalam pengiriman tidak bisa dibatalkan.',
       faq_q5: 'Bagaimana cara menghubungi Customer Service?',
-      faq_a5: 'WhatsApp: +62 812-3456-7890 (Sen–Min, 08.00–20.00 WIB) Email: breadcrumbs.id@gmail.com Instagram: @breadcrumbs.id Rata-rata respons di bawah 1 jam pada jam kerja.',
+      faq_a5: 'WhatsApp: +62 812-3456-7890 (Sen–Min, 08.00–20.00 WIB) Email: contact@ohmydough.com Instagram: @ohmydough Rata-rata respons di bawah 1 jam pada jam kerja.',
       terms_title: 'Terms of Use',
       terms_intro: 'Dengan mengakses website ini, Anda menyetujui seluruh syarat yang berlaku di bawah ini.',
       terms_item1_title: 'Penerimaan Syarat',
-      terms_item1_text: 'Penggunaan layanan website breadcrumbs.id tunduk pada syarat dan ketentuan yang berlaku. Kami berhak memperbarui ketentuan ini sewaktu-waktu tanpa pemberitahuan sebelumnya.',
+      terms_item1_text: 'Penggunaan layanan website Oh My Dough! tunduk pada syarat dan ketentuan yang berlaku. Kami berhak memperbarui ketentuan ini sewaktu-waktu tanpa pemberitahuan sebelumnya.',
       terms_item2_title: 'Hak Kekayaan Intelektual',
       terms_item2_text: 'Seluruh konten — termasuk teks, logo, desain, dan seluruh gambar produk — adalah hak milik eksklusif Oh My Dough! Bakery dan dilindungi hukum hak cipta. Penggandaan atau distribusi tanpa izin tertulis adalah tindakan yang dilarang.',
       terms_item3_title: 'Harga Produk',
@@ -1117,7 +1129,7 @@
       hero_heading_part3: '',
       hero_description: 'Every bite tells a story. Enjoy aesthetic doughnut varieties and premium artisan pastries made with love to sweeten your day.',
       hero_cta: 'See Menu',
-      stats_variants: 'Menu Varieties',
+      stats_variants: '10+',
       stats_rating: 'Rating',
       stats_customers: 'Customers',
       about_label: 'About Us',
@@ -1192,7 +1204,7 @@
       footer_contact_title: 'Contact Us',
       footer_contact_address: 'Jl. Bakeri No. 12, Jaksel',
       footer_contact_phone: '+62 812-3456-7890',
-      footer_contact_email: 'breadcrumbs.id@gmail.com',
+      footer_contact_email: 'contact@ohmydough.com',
       footer_contact_hours: '07.00 – 21.00 WIB',
       product_detail_button: 'View Details',
       cat_isian: 'Filled',
@@ -1209,11 +1221,11 @@
       faq_q4: 'Can orders be canceled?',
       faq_a4: 'Cancellations can be made no later than 30 minutes after payment is confirmed, as production begins after that. Contact our CS via WhatsApp immediately. Products already in production or delivery cannot be canceled.',
       faq_q5: 'How do I contact Customer Service?',
-      faq_a5: 'WhatsApp: +62 812-3456-7890 (Mon–Sun, 08.00–20.00 WIB) Email: breadcrumbs.id@gmail.com Instagram: @breadcrumbs.id Average response time is under 1 hour during business hours.',
+      faq_a5: 'WhatsApp: +62 812-3456-7890 (Mon–Sun, 08.00–20.00 WIB) Email: contact@ohmydough.com Instagram: @ohmydough Average response time is under 1 hour during business hours.',
       terms_title: 'Terms of Use',
       terms_intro: 'By accessing this website, you agree to the terms set forth below.',
       terms_item1_title: 'Acceptance of Terms',
-      terms_item1_text: 'Use of the breadcrumbs.id website services is subject to the applicable terms and conditions. We reserve the right to update these terms at any time without prior notice.',
+      terms_item1_text: 'Use of the Oh My Dough! website services is subject to the applicable terms and conditions. We reserve the right to update these terms at any time without prior notice.',
       terms_item2_title: 'Intellectual Property Rights',
       terms_item2_text: 'All content — including text, logos, design, and product images — is the exclusive property of Oh My Dough! Bakery and is protected by copyright law. Reproduction or distribution without written permission is prohibited.',
       terms_item3_title: 'Product Pricing',
